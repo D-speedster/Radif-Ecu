@@ -8,7 +8,7 @@ const SERVICE_LABELS = {
 };
 
 const generateTrackingCode = () =>
-  `ECU-${crypto.randomBytes(2).toString('hex').toUpperCase()}`;
+  `ECU-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
 
 const getUniqueTrackingCode = async () => {
   let code;

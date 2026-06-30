@@ -109,7 +109,6 @@ function AccordionItem({ fault, isOpen, onToggle }) {
   )
 }
 
-/* ============================================================ */
 export default function HardwareRepair() {
   useReveal()
   const [openIdx, setOpenIdx] = useState(null)

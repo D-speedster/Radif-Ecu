@@ -8,17 +8,13 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // On mount, verify the httpOnly cookie with the server
     const rehydrate = async () => {
-      const token = localStorage.getItem('token')
-      if (!token) { setLoading(false); return }
-
       try {
         const { data } = await api.get('/auth/me')
         if (data.success) setUser(data.user)
       } catch {
-        // Token expired or invalid — clear storage
-        localStorage.removeItem('token')
-        localStorage.removeItem('user')
+        // No valid session cookie — user is logged out
         setUser(null)
       } finally {
         setLoading(false)
@@ -28,15 +24,18 @@ export function AuthProvider({ children }) {
     rehydrate()
   }, [])
 
-  const login = (token, userData) => {
-    localStorage.setItem('token', token)
-    localStorage.setItem('user', JSON.stringify(userData))
+  // login: server has already set the httpOnly cookie; just store user state
+  const login = (userData) => {
     setUser(userData)
   }
 
-  const logout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
+  // logout: call the server to clear the cookie, then clear local state
+  const logout = async () => {
+    try {
+      await api.post('/auth/logout')
+    } catch {
+      // proceed regardless
+    }
     setUser(null)
   }
 

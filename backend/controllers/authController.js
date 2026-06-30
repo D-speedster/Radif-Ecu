@@ -4,11 +4,22 @@ const User = require('../models/User');
 const generateToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 
+// Cookie options — secure:true should be enabled in production (requires HTTPS)
+const cookieOptions = {
+  httpOnly: true,
+  sameSite: 'lax',
+  maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days in ms
+  secure: process.env.NODE_ENV === 'production',
+};
+
 const sendTokenResponse = (user, statusCode, res) => {
   const token = generateToken(user._id);
+
+  // Set token as httpOnly cookie — never exposed to JS
+  res.cookie('token', token, cookieOptions);
+
   res.status(statusCode).json({
     success: true,
-    token,
     user: {
       _id:        user._id,
       name:       user.name,
@@ -77,6 +88,17 @@ const loginUser = async (req, res) => {
   }
 };
 
+const logoutUser = (req, res) => {
+  // Clear the token cookie by setting it with maxAge 0
+  res.cookie('token', '', {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 0,
+  });
+  res.status(200).json({ success: true, message: 'خروج موفقیت‌آمیز بود' });
+};
+
 const getMe = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
@@ -100,4 +122,4 @@ const getMe = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser, getMe };
+module.exports = { registerUser, loginUser, logoutUser, getMe };

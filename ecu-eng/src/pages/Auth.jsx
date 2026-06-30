@@ -58,7 +58,6 @@ function PwStrength({ value }) {
   )
 }
 
-/* ============================================================ */
 export default function Auth() {
   const showToast        = useToast()
   const { login }        = useAuth()
@@ -94,8 +93,8 @@ export default function Auth() {
         password:   loginPw,
       })
 
-      // Persist session
-      login(data.token, data.user)
+      // Cookie is set by the server; store user state locally
+      login(data.user)
 
       showToast('✔ ورود موفقیت‌آمیز! در حال انتقال...', 4000)
 

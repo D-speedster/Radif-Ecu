@@ -53,9 +53,7 @@ function buildCalendar() {
 const extractError = (err) =>
   err?.response?.data?.message || 'خطایی رخ داد. لطفاً دوباره تلاش کنید.'
 
-/* ============================================================
-   SUB-COMPONENTS
-   ============================================================ */
+/* --- Sub-components --- */
 
 /* --- Step indicator bar --- */
 function StepBar({ current }) {

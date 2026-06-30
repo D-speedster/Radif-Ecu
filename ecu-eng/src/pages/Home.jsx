@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import useReveal from '../hooks/useReveal'
 import { useToast } from '../components/Toast'
 
-/* ---------- data ---------- */
+/* ── Page data ── */
 const services = [
   {
     icon: 'fa-screwdriver-wrench', color: 'cyan', badge: null,
@@ -52,7 +52,7 @@ const articles = [
     desc: 'فایل کامل پین‌اوت برای ECUهای سری Siemens MS43، S2000 و S110.' },
 ]
 
-/* ---------- stat counter ---------- */
+/* ── Stat counter ── */
 function StatCounter({ target, suffix = '', prefix = '' }) {
   const [val, setVal] = useState(0)
   const ref = useRef(null)
@@ -82,7 +82,7 @@ function StatCounter({ target, suffix = '', prefix = '' }) {
   )
 }
 
-/* ---------- booking form ---------- */
+/* ── Booking form ── */
 function BookingForm() {
   const showToast = useToast()
   const [form, setForm] = useState({ name: '', phone: '', carModel: '', serviceType: '', description: '' })
@@ -151,8 +151,7 @@ function BookingForm() {
   )
 }
 
-/* ============================================================ */
-/* ---------- Cybernetic Background SVG Schematic ----------- */
+/* ── Cybernetic background SVG ── */
 function CyberneticBackground() {
   return (
     <svg
@@ -263,7 +262,6 @@ function CyberneticBackground() {
         <path d="M160 255 L160 280 L240 280 L240 265 L265 265" fill="none" stroke="#00f0ff" strokeWidth="0.7" />
       </g>
 
-      {/* ── LAYER 3: Right ECU board block ── */}
       <g opacity="0.18" filter="url(#glow-green)" transform="translate(1130, 480)">
         <rect x="0" y="0" width="260" height="170" rx="6"
           fill="none" stroke="#39ff14" strokeWidth="1.2" />
@@ -290,7 +288,6 @@ function CyberneticBackground() {
         ))}
       </g>
 
-      {/* ── LAYER 4: Supercar chassis outline (left side, ghosted) ── */}
       <g opacity="0.13" filter="url(#glow-cyan)">
         {/* Car side silhouette — stylized supercar profile */}
         <path
@@ -349,7 +346,6 @@ function CyberneticBackground() {
         <path d="M 680 540 L 680 672" fill="none" stroke="rgba(0,240,255,0.2)" strokeWidth="0.7" />
       </g>
 
-      {/* ── LAYER 5: Top-right chassis architectural lines ── */}
       <g opacity="0.10">
         {/* Abstract performance car top-down view fragments */}
         <path d="M 900 20 L 1100 20 L 1200 80 L 1200 200 L 1100 260 L 900 260 L 800 200 L 800 80 Z"
@@ -371,7 +367,6 @@ function CyberneticBackground() {
         <path d="M 800 140 L 700 180 L 600 200"   fill="none" stroke="#00f0ff" strokeWidth="0.7" opacity="0.4" />
       </g>
 
-      {/* ── LAYER 6: Animated trace routes ── */}
       <g filter="url(#glow-cyan)">
         {/* Horizontal main bus trace */}
         <path className="hero-trace"
@@ -391,7 +386,6 @@ function CyberneticBackground() {
           fill="none" stroke="#39ff14" strokeWidth="0.9" opacity="0" style={{ animationDelay: '0.8s' }} />
       </g>
 
-      {/* ── LAYER 7: Junction nodes (glowing dots) ── */}
       <g filter="url(#glow-strong)">
         <circle className="hero-node" cx="240"  cy="320" r="3" fill="#00f0ff" style={{ animationDelay: '0s' }} />
         <circle className="hero-node" cx="440"  cy="350" r="3" fill="#39ff14" style={{ animationDelay: '0.4s' }} />
@@ -406,7 +400,6 @@ function CyberneticBackground() {
         <circle className="hero-node" cx="950"  cy="550" r="2.5" fill="#00f0ff" style={{ animationDelay: '1.1s' }} />
       </g>
 
-      {/* ── LAYER 8: Telemetry readout labels (corner dressing) ── */}
       <g opacity="0.18" fontFamily="monospace" fontSize="8" fill="#00f0ff">
         <text x="40"  y="80">SYS.BOOT  [ OK ]</text>
         <text x="40"  y="95">ECU.LINK  [ 128kbps ]</text>
@@ -430,7 +423,6 @@ function CyberneticBackground() {
         <text x="1400" y="870">IAT.TEMP  [ 24°C ]</text>
       </g>
 
-      {/* ── LAYER 9: Corner bracket dressing ── */}
       <g stroke="#00f0ff" strokeWidth="1.2" fill="none" opacity="0.25">
         {/* Top-left bracket */}
         <path d="M 20 20 L 20 60 M 20 20 L 60 20" />
@@ -442,7 +434,6 @@ function CyberneticBackground() {
         <path d="M 1420 880 L 1420 840 M 1420 880 L 1380 880" />
       </g>
 
-      {/* ── LAYER 10: Center-zone ambient darkening so text stays legible ── */}
       <radialGradient id="center-mask" cx="50%" cy="45%" r="40%">
         <stop offset="0%"   stopColor="#0d0e12" stopOpacity="0.55" />
         <stop offset="100%" stopColor="#0d0e12" stopOpacity="0" />
@@ -452,7 +443,6 @@ function CyberneticBackground() {
   )
 }
 
-/* ============================================================ */
 export default function Home() {
   useReveal()
   return (
