@@ -24,6 +24,12 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  // Body scroll lock — prevents background from shifting while drawer is open
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : 'unset'
+    return () => { document.body.style.overflow = 'unset' }
+  }, [mobileOpen])
+
   const closeMobile = () => setMobileOpen(false)
 
   const handleLogout = () => {
@@ -49,7 +55,7 @@ export default function Navbar() {
           onClick={() => setMobileOpen(o => !o)}
           aria-label="منو"
         >
-          <i className={`fa-solid ${mobileOpen ? 'fa-xmark text-brand-cyan' : 'fa-bars'} text-xl`} />
+          <i className="fa-solid fa-bars text-xl" />
         </button>
 
         {/* ABSOLUTE CENTER: Logo */}
@@ -153,67 +159,120 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu */}
-      {mobileOpen && (
-        <div className="md:hidden mt-4 px-4 pb-4 border-t border-brand-cyan/10">
-          <div className="flex flex-col gap-4 pt-4">
-            {navLinks.map(({ to, label }) => (
-              <NavLink
-                key={to}
-                to={to}
-                end={to === '/'}
-                className={({ isActive }) => `nav-link text-base${isActive ? ' active' : ''}`}
-                onClick={closeMobile}
-              >
-                {label}
-              </NavLink>
-            ))}
+      {/* ── MOBILE DRAWER BACKDROP ───────────────────────────────────────── */}
+      <div
+        className={`fixed inset-0 bg-black/60 z-40 transition-all duration-500 ease-out ${
+          mobileOpen
+            ? 'opacity-100 pointer-events-auto'
+            : 'opacity-0 pointer-events-none'
+        }`}
+        onClick={closeMobile}
+        aria-hidden="true"
+      />
 
-            {user ? (
-              <>
-                {/* User info row */}
-                <span className="text-sm text-white font-semibold flex items-center gap-1.5">
-                  <i className="fa-solid fa-circle-user text-brand-cyan" />
-                  {user.name}
-                </span>
-                {/* Admin link */}
-                {user.role === 'admin' && (
-                  <NavLink
-                    to="/admin/dashboard"
-                    className={({ isActive }) => `nav-link text-base${isActive ? ' active' : ''}`}
-                    onClick={closeMobile}
-                  >
-                    <i className="fa-solid fa-shield-halved ml-1 text-brand-green" />پنل مدیریت
-                  </NavLink>
-                )}
-                {/* Logout */}
-                <button
-                  onClick={handleLogout}
-                  className="nav-link text-base text-right w-full"
-                >
-                  <i className="fa-solid fa-right-from-bracket ml-1" />خروج
-                </button>
-              </>
-            ) : (
-              <NavLink
-                to="/auth"
-                className={({ isActive }) => `nav-link text-base${isActive ? ' active' : ''}`}
-                onClick={closeMobile}
-              >
-                ورود / ثبت‌نام
-              </NavLink>
-            )}
+      {/* ── MOBILE DRAWER PANEL ──────────────────────────────────────────── */}
+      <div
+        dir="rtl"
+        className={`md:hidden fixed inset-y-0 right-0 z-50 h-screen w-3/4 max-w-xs
+          bg-zinc-950 backdrop-blur-lg
+          border-l border-slate-800
+          shadow-[-8px_0_32px_rgba(0,0,0,0.6)]
+          flex flex-col
+          transition-all duration-500 ease-out
+          ${mobileOpen
+            ? 'translate-x-0 opacity-100 pointer-events-auto'
+            : 'translate-x-full opacity-0 pointer-events-none'
+          }`}
+      >
+        {/* Close button */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-800">
+          <span className="text-sm font-bold tracking-widest text-white/60 uppercase">منو</span>
+          <button
+            onClick={closeMobile}
+            aria-label="بستن منو"
+            className="w-8 h-8 flex items-center justify-center rounded-lg
+              text-brand-muted hover:text-brand-cyan hover:bg-brand-cyan/10
+              transition-colors duration-200"
+          >
+            <i className="fa-solid fa-xmark text-lg" />
+          </button>
+        </div>
 
+        {/* Nav links */}
+        <nav className="flex flex-col space-y-1 px-4 py-6 text-right overflow-y-auto flex-1">
+          {navLinks.map(({ to, label }) => (
             <NavLink
-              to="/booking"
-              className={({ isActive }) => `nav-link text-base${isActive ? ' active' : ''}`}
+              key={to}
+              to={to}
+              end={to === '/'}
+              className={({ isActive }) =>
+                `nav-link text-base px-3 py-3 rounded-lg${isActive ? ' active' : ''}`
+              }
               onClick={closeMobile}
             >
-              رزرو نوبت
+              {label}
+            </NavLink>
+          ))}
+
+          {/* Divider */}
+          <div className="border-t border-slate-800 my-3" />
+
+          {user ? (
+            <>
+              {/* User info */}
+              <span className="text-sm text-white/70 font-semibold flex items-center justify-end gap-2 px-3 py-2">
+                <span>{user.name}</span>
+                <i className="fa-solid fa-circle-user text-brand-cyan" />
+              </span>
+
+              {/* Admin link */}
+              {user.role === 'admin' && (
+                <NavLink
+                  to="/admin/dashboard"
+                  className={({ isActive }) =>
+                    `nav-link text-base px-3 py-3 rounded-lg${isActive ? ' active' : ''}`
+                  }
+                  onClick={closeMobile}
+                >
+                  <i className="fa-solid fa-shield-halved ml-1 text-brand-green" />پنل مدیریت
+                </NavLink>
+              )}
+
+              {/* Logout */}
+              <button
+                onClick={handleLogout}
+                className="nav-link text-base text-right w-full px-3 py-3 rounded-lg"
+              >
+                <i className="fa-solid fa-right-from-bracket ml-1" />خروج
+              </button>
+            </>
+          ) : (
+            <NavLink
+              to="/auth"
+              className={({ isActive }) =>
+                `nav-link text-base px-3 py-3 rounded-lg${isActive ? ' active' : ''}`
+              }
+              onClick={closeMobile}
+            >
+              ورود / ثبت‌نام
+            </NavLink>
+          )}
+
+          {/* Booking CTA */}
+          <div className="pt-4">
+            <NavLink
+              to="/booking"
+              className={({ isActive }) =>
+                `btn-neon-green animate-pulse-green w-full flex items-center justify-center gap-2
+                 px-4 py-3 text-sm font-bold rounded-lg${isActive ? ' active' : ''}`
+              }
+              onClick={closeMobile}
+            >
+              <i className="fa-solid fa-calendar-check" />رزرو آنلاین نوبت
             </NavLink>
           </div>
-        </div>
-      )}
+        </nav>
+      </div>
     </nav>
   )
 }
