@@ -83,6 +83,7 @@ App runs at `http://localhost:5173`. Backend at `http://localhost:5000`.
 |---|---|---|
 | POST | `/api/auth/register` | Public |
 | POST | `/api/auth/login` | Public |
+| POST | `/api/auth/logout` | Public |
 | GET | `/api/auth/me` | Protected |
 | POST | `/api/appointments` | Public |
 | GET | `/api/appointments` | Admin |
@@ -97,10 +98,11 @@ App runs at `http://localhost:5173`. Backend at `http://localhost:5000`.
 
 ## Auth Flow
 
-- Registration and login return a signed JWT (30-day expiry).
-- Token is stored in `localStorage` and attached via Axios request interceptor.
-- On app mount, `AuthContext` rehydrates state via `GET /api/auth/me`.
-- Admin routes are guarded by `protect` + `admin` middleware chain.
+- Registration and login set a signed JWT (30-day expiry) as an **httpOnly cookie** via `Set-Cookie` header — the token is never exposed to JavaScript.
+- On app mount, `AuthContext` rehydrates session state by calling `GET /api/auth/me` — if the cookie is valid, the user object is returned.
+- Logout calls `POST /api/auth/logout` which clears the cookie server-side, then clears local React state.
+- Admin routes are protected by the `protect` + `admin` middleware chain on the server, and by a client-side role check in `Dashboard.jsx`.
+- Cookie flags: `httpOnly: true`, `sameSite: 'lax'` (dev) / `'none'` (production), `secure: true` (production only).
 
 ---
 

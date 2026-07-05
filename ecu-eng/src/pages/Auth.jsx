@@ -67,7 +67,6 @@ export default function Auth() {
   /* ── login state ── */
   const [loginId,      setLoginId]      = useState('')
   const [loginPw,      setLoginPw]      = useState('')
-  const [remember,     setRemember]     = useState(false)
   const [loginLoading, setLoginLoading] = useState(false)
 
   /* ── register state ── */
@@ -196,14 +195,6 @@ export default function Auth() {
                       value={loginPw} onChange={e => setLoginPw(e.target.value)} required />
                   </div>
                 </div>
-                <div className="flex items-center justify-between">
-                  <label className="flex items-center gap-2 cursor-pointer group">
-                    <input type="checkbox" checked={remember} onChange={e => setRemember(e.target.checked)}
-                      className="w-4 h-4 cursor-pointer accent-cyan-400" />
-                    <span className="text-brand-muted text-sm group-hover:text-white transition-colors">مرا به خاطر بسپار</span>
-                  </label>
-                  <a href="#" className="text-brand-cyan text-xs font-semibold hover:text-brand-green transition-colors">فراموشی رمز عبور؟</a>
-                </div>
               </div>
 
               <button type="submit" disabled={loginLoading}
@@ -214,16 +205,6 @@ export default function Auth() {
                   : <><i className="fa-solid fa-right-to-bracket text-lg" /> ورود به پنل تخصصی</>}
               </button>
 
-              <div className="flex items-center gap-3 my-8">
-                <div className="flex-1 h-px bg-brand-muted/20" /><span className="text-brand-muted text-xs">یا</span><div className="flex-1 h-px bg-brand-muted/20" />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                {[['fa-google', 'Google'], ['fa-telegram', 'Telegram']].map(([ic, lb]) => (
-                  <button key={lb} type="button" className="flex items-center justify-center gap-2 py-2.5 rounded-xl border border-brand-muted/20 text-brand-muted text-sm hover:border-brand-cyan/40 hover:text-brand-cyan transition-all">
-                    <i className={`fa-brands ${ic} text-base`} />{lb}
-                  </button>
-                ))}
-              </div>
               <p className="text-center text-brand-muted text-sm mt-8">
                 حساب کاربری ندارید؟
                 <button type="button" onClick={() => setTab('register')} className="text-brand-cyan font-semibold hover:text-brand-green transition-colors mr-1">

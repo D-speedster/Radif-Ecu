@@ -40,6 +40,35 @@ const createAppointment = async (req, res) => {
       return res.status(400).json({ success: false, message: 'نوع خدمت نامعتبر است. مقادیر مجاز: hardware، remap، network' });
     }
 
+    // Phone number format validation
+    const phoneRegex = /^(\+98|0098|0)9\d{9}$/;
+    if (!phoneRegex.test(phone.trim())) {
+      return res.status(400).json({
+        success: false,
+        message: 'شماره تماس معتبر نیست. مثال: ۰۹۱۲XXXXXXX',
+      });
+    }
+
+    // Prevent booking in the past
+    const selectedDate = new Date(date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (isNaN(selectedDate.getTime()) || selectedDate < today) {
+      return res.status(400).json({
+        success: false,
+        message: 'تاریخ نوبت باید امروز یا در آینده باشد',
+      });
+    }
+
+    // Prevent double-booking the same date + time slot
+    const existingBooking = await Appointment.findOne({ date, timeSlot });
+    if (existingBooking) {
+      return res.status(409).json({
+        success: false,
+        message: 'این ساعت قبلاً رزرو شده است. لطفاً ساعت یا روز دیگری انتخاب کنید.',
+      });
+    }
+
     const trackingCode = await getUniqueTrackingCode();
 
     const appointmentData = {

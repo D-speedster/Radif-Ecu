@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import useReveal from '../hooks/useReveal'
 import { useToast } from '../components/Toast'
+import api from '../utils/api'
 
 export default function Contact() {
   useReveal()
@@ -17,11 +18,23 @@ export default function Contact() {
       showToast('لطفاً تمام فیلدهای اجباری را تکمیل کنید.'); return
     }
     setLoading(true)
-    await new Promise(r => setTimeout(r, 1400))
-    showToast('✔ پیام شما به تیم فنی ارسال شد. به زودی پاسخ می‌گیرید.', 5000)
-    setDone(true); setLoading(false)
-    setForm({ name: '', phone: '', subject: '', message: '' })
-    setTimeout(() => setDone(false), 3000)
+    try {
+      const { data } = await api.post('/contact', {
+        name:    form.name.trim(),
+        phone:   form.phone.trim(),
+        subject: form.subject.trim(),
+        message: form.message.trim(),
+      })
+      showToast(data.message || '✔ پیام شما ارسال شد.', 5000)
+      setDone(true)
+      setForm({ name: '', phone: '', subject: '', message: '' })
+      setTimeout(() => setDone(false), 3000)
+    } catch (err) {
+      const msg = err?.response?.data?.message || 'خطا در ارسال پیام. لطفاً دوباره تلاش کنید.'
+      showToast(msg, 5000)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (

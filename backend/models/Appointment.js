@@ -75,5 +75,7 @@ const appointmentSchema = new mongoose.Schema(
 
 appointmentSchema.index({ trackingCode: 1 });
 appointmentSchema.index({ status: 1, createdAt: -1 });
+// Prevent double-booking: unique combination of date + timeSlot
+appointmentSchema.index({ date: 1, timeSlot: 1 }, { unique: true });
 
 module.exports = mongoose.model('Appointment', appointmentSchema);

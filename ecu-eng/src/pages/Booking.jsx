@@ -328,7 +328,12 @@ export default function Booking() {
   const canNext = () => {
     if (step === 1) return !!service
     if (step === 2) return !!selectedDate && !!selectedTime
-    if (step === 3) return form.name.trim() && form.phone.trim() && form.carModel.trim()
+    if (step === 3) {
+      const phoneRegex = /^(\+98|0098|0)9\d{9}$/
+      return form.name.trim() &&
+             phoneRegex.test(form.phone.trim()) &&
+             form.carModel.trim()
+    }
     return false
   }
 
@@ -348,6 +353,22 @@ export default function Booking() {
   const submit = async () => {
     if (!canNext()) {
       showToast('لطفاً تمام فیلدهای اجباری را تکمیل کنید.')
+      return
+    }
+
+    // Client-side phone validation
+    const phoneRegex = /^(\+98|0098|0)9\d{9}$/
+    if (!phoneRegex.test(form.phone.trim())) {
+      showToast('شماره تماس معتبر نیست. مثال: ۰۹۱۲XXXXXXX')
+      return
+    }
+
+    // Prevent past date selection
+    const chosen = new Date(selectedDate)
+    const now = new Date()
+    now.setHours(0, 0, 0, 0)
+    if (chosen < now) {
+      showToast('تاریخ انتخاب‌شده گذشته است. لطفاً یک روز آینده انتخاب کنید.')
       return
     }
 

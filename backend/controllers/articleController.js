@@ -1,14 +1,15 @@
 const jwt = require('jsonwebtoken');
 const Article = require('../models/Article');
 
-// Silently decode an optional Bearer token — used on soft-auth routes
-const tryDecodeToken = (req) => {
+// Silently check httpOnly cookie token — used on soft-auth routes
+const isRequestAuthenticated = (req) => {
+  const token = req.cookies?.token;
+  if (!token) return false;
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) return null;
-    return jwt.verify(authHeader.split(' ')[1], process.env.JWT_SECRET);
+    jwt.verify(token, process.env.JWT_SECRET);
+    return true;
   } catch {
-    return null;
+    return false;
   }
 };
 
@@ -37,7 +38,7 @@ const getArticles = async (req, res) => {
     if (req.query.q) filter.$text = { $search: req.query.q };
 
     const articles = await Article.find(filter).sort({ createdAt: -1 });
-    const isAuthenticated = !!tryDecodeToken(req);
+    const isAuthenticated = isRequestAuthenticated(req);
 
     const data = isAuthenticated
       ? articles.map((a) => a.toObject())
