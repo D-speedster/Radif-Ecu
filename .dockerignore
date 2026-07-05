@@ -1,0 +1,18 @@
+# ── Node dependencies (each service installs its own inside the container) ───
+node_modules
+*/node_modules
+
+# ── Version control ──────────────────────────────────────────────────────────
+.git
+.gitignore
+
+# ── Secrets (injected at runtime via env_file) ───────────────────────────────
+.env
+**/.env
+
+# ── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+
+# ── Pre-built frontend output (built fresh inside the container) ─────────────
+ecu-eng/dist

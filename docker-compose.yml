@@ -1,0 +1,51 @@
+version: '3.9'
+
+services:
+  # ─── MongoDB ────────────────────────────────────────────────────────────────
+  mongo:
+    image: mongo:7
+    container_name: radif-mongo
+    restart: unless-stopped
+    networks:
+      - radif-network
+    volumes:
+      - mongo-data:/data/db
+    # No ports exposed — only reachable inside radif-network
+
+  # ─── Node.js Backend ────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: radif-backend
+    restart: unless-stopped
+    networks:
+      - radif-network
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - mongo
+
+  # ─── Nginx + React Frontend ─────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./ecu-eng
+      dockerfile: Dockerfile
+    container_name: radif-frontend
+    restart: unless-stopped
+    networks:
+      - radif-network
+    ports:
+      - '80:80'
+    depends_on:
+      - backend
+
+# ─── Named Volumes ─────────────────────────────────────────────────────────────
+volumes:
+  mongo-data:
+    driver: local
+
+# ─── Custom Network ────────────────────────────────────────────────────────────
+networks:
+  radif-network:
+    driver: bridge
