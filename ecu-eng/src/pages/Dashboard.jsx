@@ -225,7 +225,7 @@ function WikiPanel({ articles, articlesLoading, onArticleCreated }) {
         category:    form.category,
         content:     form.content.trim(),
         isPrivate:   form.access === 'locked',
-        published:   false,
+        published:   true,
         downloadUrl: form.downloadUrl.trim() || null,
       }
       const { data } = await api.post('/articles', payload)
@@ -589,50 +589,6 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-brand-bg pt-20">
-
-      {/* ── Top Admin Header Bar ── */}
-      <div className="border-b border-brand-cyan/10 px-6 lg:px-10 py-3"
-        style={{ background: 'rgba(13,14,18,0.9)', backdropFilter: 'blur(12px)' }}>
-        <div className="max-w-screen-xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <button
-              className="lg:hidden text-brand-muted hover:text-brand-cyan p-1.5 rounded-lg border border-brand-cyan/15 transition-colors"
-              onClick={() => setSidebarOpen(o => !o)} aria-label="منوی سایدبار">
-              <i className={`fa-solid ${sidebarOpen ? 'fa-xmark' : 'fa-bars'} text-base`} />
-            </button>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-brand-green animate-pulse-green" />
-              <span className="text-brand-muted text-xs font-mono">ADMIN_SESSION.ACTIVE</span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <span className="hidden sm:flex items-center gap-2 text-brand-muted text-xs border border-brand-cyan/15 rounded-lg px-3 py-1.5">
-              <i className="fa-regular fa-clock text-brand-cyan" />
-              {new Date().toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' })}
-            </span>
-            <button className="relative text-brand-muted hover:text-brand-cyan transition-colors p-1.5 rounded-lg border border-brand-cyan/15">
-              <i className="fa-solid fa-bell text-base" />
-              {pendingCount > 0 && (
-                <span className="absolute -top-1 -left-1 w-4 h-4 rounded-full bg-brand-green text-black text-[9px] font-extrabold flex items-center justify-center">
-                  {pendingCount}
-                </span>
-              )}
-            </button>
-            <div className="flex items-center gap-2 border border-brand-cyan/20 rounded-xl px-3 py-1.5 bg-brand-cyan/5">
-              <div className="w-6 h-6 rounded-full bg-brand-cyan/20 border border-brand-cyan/30 flex items-center justify-center">
-                <i className="fa-solid fa-user-shield text-brand-cyan text-xs" />
-              </div>
-              <span className="text-white text-xs font-semibold hidden sm:block">{user.name}</span>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="text-brand-muted hover:text-brand-cyan text-xs border border-brand-cyan/15 rounded-lg px-3 py-1.5 transition-colors hidden sm:flex items-center gap-1.5">
-              <i className="fa-solid fa-arrow-right-from-bracket text-xs" />خروج
-            </button>
-          </div>
-        </div>
-      </div>
 
       {/* ── Two-Column Layout ── */}
       <div className="max-w-screen-xl mx-auto flex min-h-[calc(100vh-120px)]">

@@ -98,8 +98,8 @@ function ArticleCard({ article, onLockedDownload }) {
             {meta.label}
           </span>
 
-          {/* Lock badge — show when backend stripped downloadUrl OR article is inherently locked */}
-          {article.downloadLocked || (!hasFile && article.isPrivate !== false)
+          {/* Lock badge — only when backend explicitly flagged downloadLocked (guest + private article) */}
+          {article.downloadLocked
             ? (
               <span className="auth-badge">
                 <i className="fa-solid fa-lock text-xs" />نیاز به ورود
@@ -156,7 +156,10 @@ function ArticleCard({ article, onLockedDownload }) {
             onClick={onLockedDownload}
             className="btn-neon-green animate-pulse-green w-full py-2.5 text-xs font-bold rounded-lg flex items-center justify-center gap-2"
           >
-            <i className="fa-solid fa-lock" />مطالعه و دانلود فایل تخصصی
+            {article.downloadLocked
+              ? <><i className="fa-solid fa-lock" />مطالعه و دانلود فایل تخصصی</>
+              : <><i className="fa-solid fa-file-slash" />فایل هنوز آپلود نشده</>
+            }
           </button>
         )}
       </div>
@@ -212,8 +215,12 @@ export default function Wiki() {
     // Re-fetch when user logs in/out so download URLs update instantly
   }, [user])
 
-  const handleLockedDownload = () => {
-    showToast('برای دانلود فایل‌های تخصصی ایسیو ابتدا باید وارد حساب خود شوید', 5000)
+  const handleLockedDownload = (isLocked) => {
+    if (isLocked) {
+      showToast('برای دانلود فایل‌های تخصصی ابتدا باید وارد حساب خود شوید', 5000)
+    } else {
+      showToast('این مقاله فایل دانلودی ندارد یا هنوز آپلود نشده است', 4000)
+    }
   }
 
   const filtered = useMemo(() => {
@@ -339,7 +346,7 @@ export default function Wiki() {
                 <ArticleCard
                   key={a._id}
                   article={a}
-                  onLockedDownload={handleLockedDownload}
+                  onLockedDownload={() => handleLockedDownload(!!a.downloadLocked)}
                 />
               ))}
             </div>

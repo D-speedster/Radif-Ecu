@@ -105,13 +105,13 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop nav links */}
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-4">
           {navLinks.map(({ to, label }) => (
             <NavLink
               key={to}
               to={to}
               end={to === '/'}
-              className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
+              className={({ isActive }) => `nav-link text-sm${isActive ? ' active' : ''}`}
             >
               {label}
             </NavLink>
@@ -119,7 +119,7 @@ export default function Navbar() {
         </div>
 
         {/* Desktop CTAs */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {user ? (
             <div className="flex items-center gap-2">
               {user.role === 'admin' && (
@@ -131,13 +131,13 @@ export default function Navbar() {
                   <i className="fa-solid fa-shield-halved ml-1" />ادمین
                 </Link>
               )}
-              <span className="text-sm text-white font-semibold px-2 flex items-center gap-1.5">
+              <span className="hidden xl:flex text-sm text-white font-semibold px-2 items-center gap-1.5">
                 <i className="fa-solid fa-circle-user text-brand-cyan" />
                 {user.name}
               </span>
               <button
                 onClick={handleLogout}
-                className="btn-outline-cyan px-4 py-2 text-sm font-semibold rounded-lg inline-flex items-center gap-2"
+                className="btn-outline-cyan px-3 py-1.5 text-xs font-semibold rounded-lg inline-flex items-center gap-1.5"
               >
                 <i className="fa-solid fa-right-from-bracket" /> خروج
               </button>
@@ -145,16 +145,16 @@ export default function Navbar() {
           ) : (
             <Link
               to="/auth"
-              className="btn-outline-cyan px-4 py-2 text-sm font-semibold rounded-lg inline-flex items-center gap-2"
+              className="btn-outline-cyan px-3 py-1.5 text-xs font-semibold rounded-lg inline-flex items-center gap-1.5"
             >
               <i className="fa-solid fa-user-circle" /> ورود
             </Link>
           )}
           <Link
             to="/booking"
-            className="btn-neon-green animate-pulse-green px-5 py-2.5 text-sm font-bold rounded-lg"
+            className="btn-neon-green animate-pulse-green px-4 py-2 text-xs font-bold rounded-lg whitespace-nowrap"
           >
-            <i className="fa-solid fa-calendar-check ml-2" />رزرو آنلاین نوبت
+            <i className="fa-solid fa-calendar-check ml-1" />رزرو نوبت
           </Link>
         </div>
       </div>
