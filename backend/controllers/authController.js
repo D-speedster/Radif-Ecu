@@ -4,12 +4,12 @@ const User = require('../models/User');
 const generateToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 
-// Cookie options — secure:true should be enabled in production (requires HTTPS)
+// Cookie options — set COOKIE_SECURE=true only when running behind HTTPS
 const cookieOptions = {
   httpOnly: true,
   sameSite: 'lax',
   maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days in ms
-  secure: process.env.NODE_ENV === 'production',
+  secure: process.env.COOKIE_SECURE === 'true',
 };
 
 const sendTokenResponse = (user, statusCode, res) => {
@@ -93,7 +93,7 @@ const logoutUser = (req, res) => {
   res.cookie('token', '', {
     httpOnly: true,
     sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.COOKIE_SECURE === 'true',
     maxAge: 0,
   });
   res.status(200).json({ success: true, message: 'خروج موفقیت‌آمیز بود' });
