@@ -37,6 +37,7 @@ const extractError = (err) =>
 const SIDEBAR_LINKS = [
   { id: 'overview',     icon: 'fa-gauge',         label: 'داشبورد اصلی',    sub: 'نمای کلی' },
   { id: 'appointments', icon: 'fa-calendar-check', label: 'مدیریت نوبت‌ها', sub: 'نوبت‌دهی' },
+  { id: 'contact',      icon: 'fa-envelope',       label: 'پیام‌های تماس',  sub: 'درخواست‌ها' },
   { id: 'wiki',         icon: 'fa-database',       label: 'مدیریت دانشنامه', sub: 'فایل‌ها و مقالات' },
 ]
 
@@ -172,6 +173,94 @@ function AppointmentsPanel({ appts, loading, onChangeStatus, onDelete }) {
               <div className="text-center py-12">
                 <i className="fa-solid fa-calendar-xmark text-brand-muted text-4xl opacity-30 mb-3 block" />
                 <p className="text-brand-muted text-sm">هیچ نوبتی ثبت نشده است</p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+/* ── Contact Messages Panel ── */
+function ContactMessagesPanel({ messages, loading, onUpdateStatus }) {
+  const STATUS_META_CONTACT = {
+    'New':     { label: 'جدید',        cls: 'status-pending',    icon: 'fa-envelope' },
+    'Read':    { label: 'خوانده شده',  cls: 'status-inprogress', icon: 'fa-envelope-open' },
+    'Replied': { label: 'پاسخ داده شده', cls: 'status-completed', icon: 'fa-reply' },
+  }
+
+  const STATUS_CYCLE_CONTACT = {
+    'New': 'Read',
+    'Read': 'Replied',
+    'Replied': 'New',
+  }
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-white text-xl font-extrabold">پیام‌های تماس</h2>
+        <span className="text-brand-muted text-sm">{messages.length.toLocaleString('fa-IR')} پیام</span>
+      </div>
+      <div className="glass-card overflow-hidden">
+        {loading ? (
+          <div className="text-center py-16">
+            <i className="fa-solid fa-spinner fa-spin text-brand-cyan text-3xl mb-3 block" />
+            <p className="text-brand-muted text-sm">در حال بارگذاری پیام‌ها...</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="dash-table">
+              <thead>
+                <tr>
+                  {['نام', 'تلفن', 'موضوع', 'پیام', 'وضعیت', 'زمان', 'عملیات'].map(h => (
+                    <th key={h}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {messages.map(m => {
+                  const meta = STATUS_META_CONTACT[m.status] || STATUS_META_CONTACT['New']
+                  return (
+                    <tr key={m._id}>
+                      <td>
+                        <div className="flex items-center gap-2">
+                          <div className="w-7 h-7 rounded-full bg-brand-cyan/10 border border-brand-cyan/20 flex items-center justify-center flex-shrink-0">
+                            <i className="fa-solid fa-user text-brand-cyan text-xs" />
+                          </div>
+                          <span className="font-medium text-white whitespace-nowrap">{m.name}</span>
+                        </div>
+                      </td>
+                      <td><span dir="ltr" className="font-mono text-xs text-brand-muted">{m.phone}</span></td>
+                      <td><span className="text-white text-xs max-w-[200px] truncate block">{m.subject}</span></td>
+                      <td><span className="text-brand-muted text-xs max-w-[300px] truncate block">{m.message}</span></td>
+                      <td>
+                        <span className={`status-badge ${meta.cls}`}>
+                          <i className={`fa-solid ${meta.icon} text-xs`} />{meta.label}
+                        </span>
+                      </td>
+                      <td>
+                        <span className="text-brand-muted text-xs">
+                          {new Date(m.createdAt).toLocaleDateString('fa-IR')}
+                        </span>
+                      </td>
+                      <td>
+                        <button
+                          onClick={() => onUpdateStatus(m._id, m.status)}
+                          className="flex items-center gap-1 text-xs text-brand-cyan border border-brand-cyan/25 bg-brand-cyan/5 px-2.5 py-1.5 rounded-lg hover:bg-brand-cyan/15 transition-colors whitespace-nowrap"
+                        >
+                          <i className="fa-solid fa-arrows-rotate text-xs" />تغییر وضعیت
+                        </button>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+            {messages.length === 0 && (
+              <div className="text-center py-12">
+                <i className="fa-solid fa-envelope-open text-brand-muted text-4xl opacity-30 mb-3 block" />
+                <p className="text-brand-muted text-sm">هیچ پیام تماسی دریافت نشده است</p>
               </div>
             )}
           </div>
@@ -427,8 +516,9 @@ function WikiPanel({ articles, articlesLoading, onArticleCreated }) {
 }
 
 /* ── Sidebar ── */
-function SidebarContent({ active, onSelect, appointments, user, onLogout }) {
+function SidebarContent({ active, onSelect, appointments, contactMessages, user, onLogout }) {
   const pendingCount = appointments.filter(a => a.status === 'Pending').length
+  const newMessagesCount = contactMessages.filter(m => m.status === 'New').length
 
   return (
     <>
@@ -463,6 +553,11 @@ function SidebarContent({ active, onSelect, appointments, user, onLogout }) {
                 {link.id === 'appointments' && pendingCount > 0 && (
                   <span className="bg-brand-green text-black text-[9px] font-extrabold px-1.5 py-0.5 rounded-full leading-none">
                     {pendingCount}
+                  </span>
+                )}
+                {link.id === 'contact' && newMessagesCount > 0 && (
+                  <span className="bg-brand-cyan text-black text-[9px] font-extrabold px-1.5 py-0.5 rounded-full leading-none">
+                    {newMessagesCount}
                   </span>
                 )}
               </div>
@@ -524,6 +619,8 @@ export default function Dashboard() {
   const [apptsLoading,    setApptsLoading]    = useState(false)
   const [articles,        setArticles]        = useState([])
   const [articlesLoading, setArticlesLoading] = useState(false)
+  const [contactMessages, setContactMessages] = useState([])
+  const [contactLoading,  setContactLoading]  = useState(false)
 
   const fetchAppointments = useCallback(async () => {
     setApptsLoading(true)
@@ -549,12 +646,25 @@ export default function Dashboard() {
     }
   }, [showToast])
 
+  const fetchContactMessages = useCallback(async () => {
+    setContactLoading(true)
+    try {
+      const { data } = await api.get('/contact')
+      setContactMessages(data.messages || [])
+    } catch (err) {
+      showToast(extractError(err), 5000)
+    } finally {
+      setContactLoading(false)
+    }
+  }, [showToast])
+
   /* Fetch on mount once admin is confirmed */
   useEffect(() => {
     if (!user || user.role !== 'admin') return
     fetchAppointments()
     fetchArticles()
-  }, [user, fetchAppointments, fetchArticles])
+    fetchContactMessages()
+  }, [user, fetchAppointments, fetchArticles, fetchContactMessages])
 
   const handleChangeStatus = async (id, currentStatus) => {
     const nextStatus = STATUS_CYCLE[currentStatus] || 'Pending'
@@ -575,6 +685,24 @@ export default function Dashboard() {
 
   const handleArticleCreated = newArticle => {
     setArticles(prev => [newArticle, ...prev])
+  }
+
+  const handleUpdateContactStatus = async (id, currentStatus) => {
+    const STATUS_CYCLE_CONTACT = {
+      'New': 'Read',
+      'Read': 'Replied', 
+      'Replied': 'New',
+    }
+    const nextStatus = STATUS_CYCLE_CONTACT[currentStatus] || 'New'
+    
+    setContactMessages(prev => prev.map(m => m._id === id ? { ...m, status: nextStatus } : m))
+    try {
+      await api.patch(`/contact/${id}/status`, { status: nextStatus })
+      showToast('وضعیت پیام تغییر کرد.')
+    } catch (err) {
+      setContactMessages(prev => prev.map(m => m._id === id ? { ...m, status: currentStatus } : m))
+      showToast(extractError(err), 5000)
+    }
   }
 
   const handleLogout = () => {
@@ -600,6 +728,7 @@ export default function Dashboard() {
             active={activePanel}
             onSelect={setActivePanel}
             appointments={appointments}
+            contactMessages={contactMessages}
             user={user}
             onLogout={handleLogout}
           />
@@ -620,6 +749,7 @@ export default function Dashboard() {
                 active={activePanel}
                 onSelect={id => { setActivePanel(id); setSidebarOpen(false) }}
                 appointments={appointments}
+                contactMessages={contactMessages}
                 user={user}
                 onLogout={handleLogout}
               />
@@ -638,6 +768,13 @@ export default function Dashboard() {
               loading={apptsLoading}
               onChangeStatus={handleChangeStatus}
               onDelete={handleDeleteAppointment}
+            />
+          )}
+          {activePanel === 'contact' && (
+            <ContactMessagesPanel
+              messages={contactMessages}
+              loading={contactLoading}
+              onUpdateStatus={handleUpdateContactStatus}
             />
           )}
           {activePanel === 'wiki' && (
