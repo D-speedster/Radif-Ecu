@@ -5,7 +5,8 @@ const { registerUser, loginUser, logoutUser, getMe } = require('../controllers/a
 const { protect } = require('../middleware/authMiddleware');
 
 // Brute-force protection: max 5 attempts per 15 minutes per IP
-const authLimiter = rateLimit({
+// Disable in test environment
+const authLimiter = process.env.NODE_ENV === 'test' ? (req, res, next) => next() : rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 5,
   standardHeaders: true,
