@@ -322,6 +322,17 @@ export default function Booking() {
   const [trackingCode, setTrackingCode] = useState(null)
   const [submitting,   setSubmitting]   = useState(false)
 
+  // Auto-fill user info when logged in
+  const [autoFilled, setAutoFilled] = useState(false)
+  if (user && !autoFilled) {
+    setForm(f => ({
+      ...f,
+      name: user.name || f.name,
+      phone: user.phone || user.identifier || f.phone,
+    }))
+    setAutoFilled(true)
+  }
+
   const setField = (k, v) => setForm(f => ({ ...f, [k]: v }))
 
   /* Navigation guards */
