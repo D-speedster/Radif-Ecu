@@ -21,8 +21,7 @@ interface Step1Props {
 const serviceTypes = [
   { value: 'hardware', label: 'تعمیرات سخت‌افزار ECU', icon: '🔧' },
   { value: 'remap', label: 'ریمپ و تیونینگ', icon: '⚡' },
-  { value: 'multiplex', label: 'مالتی‌پلکس و دیاگ', icon: '🔌' },
-  { value: 'dump', label: 'خواندن و نوشتن فایل دامپ', icon: '💾' },
+  { value: 'network', label: 'مالتی‌پلکس، دیاگ و عیب‌یابی', icon: '🔌' },
 ];
 
 export default function Step1PersonalInfo({ formData, errors, onChange }: Step1Props) {

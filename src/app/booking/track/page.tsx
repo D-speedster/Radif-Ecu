@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Card from '@/components/ui/Card';
@@ -39,7 +39,7 @@ const serviceTypeLabels: Record<string, string> = {
   dump: 'خواندن و نوشتن فایل دامپ',
 };
 
-export default function TrackAppointmentPage() {
+function TrackAppointmentContent() {
   const searchParams = useSearchParams();
   const codeFromUrl = searchParams.get('code') || '';
 
@@ -222,5 +222,14 @@ export default function TrackAppointmentPage() {
         )}
       </div>
     </div>
+  );
+}
+
+
+export default function TrackAppointmentPage() {
+  return (
+    <Suspense fallback={null}>
+      <TrackAppointmentContent />
+    </Suspense>
   );
 }

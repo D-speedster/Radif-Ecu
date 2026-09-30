@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
@@ -29,12 +29,18 @@ interface FormErrors {
   time?: string;
 }
 
+// تبدیل ارقام فارسی/عربی به انگلیسی
+const toEnglishDigits = (v: string) =>
+  v
+    .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0))
+    .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660));
+
 const steps = [
   { title: 'اطلاعات شخصی', description: 'نام، تلفن و نوع خدمت' },
   { title: 'تاریخ و ساعت', description: 'انتخاب زمان مراجعه' },
 ];
 
-export default function BookingPage() {
+function BookingForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [currentStep, setCurrentStep] = useState(1);
@@ -77,7 +83,7 @@ export default function BookingPage() {
 
     if (!formData.phone.trim()) {
       newErrors.phone = 'شماره تماس الزامی است';
-    } else if (!/^09\d{9}$/.test(formData.phone.replace(/\D/g, ''))) {
+    } else if (!/^09\d{9}$/.test(toEnglishDigits(formData.phone).replace(/\D/g, ''))) {
       newErrors.phone = 'شماره تماس معتبر نیست';
     }
 
@@ -130,14 +136,24 @@ export default function BookingPage() {
     setLoading(true);
     
     try {
-      const response = await api.post('/appointments', formData);
+      const payload = {
+        name: formData.name.trim(),
+        phone: toEnglishDigits(formData.phone).replace(/\s|-/g, ''),
+        carModel: formData.carModel.trim(),
+        serviceType: formData.serviceType,
+        date: formData.date,
+        timeSlot: formData.time,
+        notes: formData.description,
+      };
+      const response = await api.post('/appointments', payload);
       const trackingCode = response.data.trackingCode || response.data.appointment?.trackingCode;
       
       // هدایت به صفحه نمایش کد پیگیری
       router.push(`/booking/success?code=${trackingCode}`);
-    } catch (error: any) {
+    } catch (error) {
       console.error('خطا در ثبت نوبت:', error);
-      alert(error.response?.data?.message || 'خطا در ثبت نوبت. لطفا دوباره تلاش کنید.');
+      const message = (error as { response?: { data?: { message?: string } } })?.response?.data?.message;
+      alert(message || 'خطا در ثبت نوبت. لطفا دوباره تلاش کنید.');
     } finally {
       setLoading(false);
     }
@@ -227,5 +243,14 @@ export default function BookingPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+
+export default function BookingPage() {
+  return (
+    <Suspense fallback={null}>
+      <BookingForm />
+    </Suspense>
   );
 }
