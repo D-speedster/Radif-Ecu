@@ -1,0 +1,222 @@
+'use client';
+
+import React, { useState } from 'react';
+import Card from '@/components/ui/Card';
+import Input from '@/components/ui/Input';
+import Textarea from '@/components/ui/Textarea';
+import Button from '@/components/ui/Button';
+import { Phone, Mail, MapPin, Clock, Send } from 'lucide-react';
+import api from '@/lib/api';
+
+export default function ContactPage() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    subject: '',
+    message: '',
+  });
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setSuccess(false);
+
+    try {
+      await api.post('/contact', formData);
+      setSuccess(true);
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        subject: '',
+        message: '',
+      });
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'خطا در ارسال پیام. لطفا دوباره تلاش کنید.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const contactInfo = [
+    {
+      icon: Phone,
+      title: 'تلفن تماس',
+      value: '۰۲۱-۱۲۳۴۵۶۷۸',
+      link: 'tel:02112345678',
+    },
+    {
+      icon: Mail,
+      title: 'ایمیل',
+      value: 'info@radif-ecu.ir',
+      link: 'mailto:info@radif-ecu.ir',
+    },
+    {
+      icon: MapPin,
+      title: 'آدرس',
+      value: 'تهران، خیابان ولیعصر، پلاک ۱۲۳',
+      link: null,
+    },
+    {
+      icon: Clock,
+      title: 'ساعت کاری',
+      value: 'شنبه تا پنج‌شنبه: ۹ صبح تا ۶ عصر',
+      link: null,
+    },
+  ];
+
+  return (
+    <div className="container mx-auto px-4 py-12 md:py-16">
+      {/* هدر */}
+      <div className="text-center mb-12">
+        <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          تماس با ما
+        </h1>
+        <p className="text-[var(--color-muted)] text-lg max-w-2xl mx-auto">
+          برای دریافت مشاوره رایگان و اطلاعات بیشتر با ما در تماس باشید
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* فرم تماس */}
+        <div className="lg:col-span-2">
+          <Card>
+            <h2 className="text-2xl font-bold text-white mb-6">
+              ارسال پیام
+            </h2>
+
+            {success && (
+              <div className="bg-green-900/20 border border-green-500 text-green-400 rounded-lg p-4 mb-6">
+                پیام شما با موفقیت ارسال شد. به زودی با شما تماس خواهیم گرفت.
+              </div>
+            )}
+
+            {error && (
+              <div className="bg-red-900/20 border border-[var(--color-accent)] text-[var(--color-accent)] rounded-lg p-4 mb-6">
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Input
+                  label="نام و نام خانوادگی"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  placeholder="نام خود را وارد کنید"
+                />
+                <Input
+                  label="شماره تماس"
+                  name="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  required
+                  placeholder="۰۹۱۲-۳۴۵-۶۷۸۹"
+                />
+              </div>
+
+              <Input
+                label="ایمیل"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                placeholder="your-email@example.com"
+              />
+
+              <Input
+                label="موضوع"
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                required
+                placeholder="موضوع پیام خود را وارد کنید"
+              />
+
+              <Textarea
+                label="پیام"
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                required
+                placeholder="متن پیام خود را اینجا بنویسید..."
+                rows={6}
+              />
+
+              <Button
+                type="submit"
+                variant="accent"
+                size="lg"
+                disabled={loading}
+                className="w-full"
+              >
+                {loading ? 'در حال ارسال...' : 'ارسال پیام'}
+                <Send className="w-5 h-5 mr-2" />
+              </Button>
+            </form>
+          </Card>
+        </div>
+
+        {/* اطلاعات تماس */}
+        <div className="space-y-6">
+          {contactInfo.map((info, index) => {
+            const Icon = info.icon;
+            const content = (
+              <Card hover={!!info.link}>
+                <div className="flex items-start gap-4">
+                  <div className="bg-[var(--color-primary)] p-3 rounded-lg">
+                    <Icon className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold text-white mb-2">
+                      {info.title}
+                    </h3>
+                    <p className="text-[var(--color-muted)] leading-relaxed">
+                      {info.value}
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            );
+
+            return info.link ? (
+              <a key={index} href={info.link}>
+                {content}
+              </a>
+            ) : (
+              <div key={index}>{content}</div>
+            );
+          })}
+
+          {/* نقشه (می‌توانید بعدا Google Maps اضافه کنید) */}
+          <Card>
+            <h3 className="text-lg font-bold text-white mb-4">
+              موقعیت روی نقشه
+            </h3>
+            <div className="bg-[var(--color-bg)] rounded-lg h-48 flex items-center justify-center">
+              <p className="text-[var(--color-muted)]">
+                نقشه به زودی اضافه می‌شود
+              </p>
+            </div>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+}

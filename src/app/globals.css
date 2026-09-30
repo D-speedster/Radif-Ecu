@@ -1,0 +1,180 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* YekanBakh Font Faces */
+@font-face {
+  font-family: 'YekanBakh';
+  src: url('/fonts/YekanBakhFaNum-Regular-B4cV0wVW.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'YekanBakh';
+  src: url('/fonts/YekanBakhFaNum-SemiBold-C4JCeP6F.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'YekanBakh';
+  src: url('/fonts/YekanBakhFaNum-Bold-CMNT45Oa.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'YekanBakh';
+  src: url('/fonts/YekanBakhFaNum-ExtraBold-CdMhak6a.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'YekanBakh';
+  src: url('/fonts/YekanBakhFaNum-Black-B_OWglyZ.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* ── پایه صفحه ── */
+  --color-bg: #F0F2F5;              /* نقره‌ای بسیار کم‌رنگ — نه سفید خالص */
+  --color-surface: #FFFFFF;         /* کارت‌ها و پنل‌ها روی پس‌زمینه */
+  --color-surface-2: #E8EBF0;       /* سطح دوم، hover */
+  --color-border: #D8DCE3;          /* بوردر */
+  --color-divider: #C8CDD6;         /* خط جداکننده */
+
+  /* ── Navbar / Header ── */
+  --color-nav-bg: #16213E;          /* سرمه‌ای تیره — charcoal متالیک */
+  --color-nav-text: #E8ECF4;        /* متن لینک‌های navbar */
+  --color-nav-text-hover: #FFFFFF;
+  --color-nav-border: #1E2D4F;
+
+  /* ── متن ── */
+  --color-text: #1A1F2E;            /* تیره‌تر از #252525 برای کنتراست روی bg */
+  --color-text-secondary: #4A5568;
+  --color-text-muted: #718096;
+
+  /* ── Accent آبی برقی (ECU/Tech) ── */
+  --color-accent: #2563EB;          /* آبی برقی — تم فنی */
+  --color-accent-hover: #1D4ED8;
+  --color-accent-light: #DBEAFE;    /* پس‌زمینه badge آبی */
+
+  /* ── دکمه اصلی ── */
+  --color-btn-primary: #16213E;     /* charcoal */
+  --color-btn-hover: #1E2D4F;
+  --color-btn-text: #FFFFFF;
+
+  /* ── وضعیت ── */
+  --color-success: #16A34A;
+  --color-warning: #F59E0B;
+  --color-danger: #DC2626;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  direction: rtl;
+  text-align: right;
+}
+
+body {
+  font-family: "YekanBakh", sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* کارت‌ها روی پس‌زمینه bg */
+.card-surface {
+  background-color: var(--color-surface);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Pulse Animation for Hero Section */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.3);
+  }
+}
+
+.pulse-dot {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+
+/* Trust badges: موبایل ۲ ردیف، دسکتاپ ۱ ردیف */
+.trust-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+@media (max-width: 639px) {
+  .trust-badges {
+    /* حداکثر ۲ آیتم در هر ردیف — آیتم سوم به ردیف بعد می‌ره */
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .trust-badges > div {
+    flex: 0 0 calc(50% - 4px);
+    justify-content: center;
+  }
+  .trust-badges > div:last-child:nth-child(odd) {
+    flex: 0 0 100%;
+    max-width: 160px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  .trust-badges {
+    justify-content: flex-start;
+  }
+}
+
+/* Footer links */
+.footer-link {
+  color: #8A97B0;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-link:hover {
+  color: #FFFFFF;
+}
+
+/* Skeleton loading animation */
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.45; }
+}
+
+/* Footer CTA button hover */
+.footer-cta-btn:hover {
+  background-color: rgba(37,99,235,0.2) !important;
+}

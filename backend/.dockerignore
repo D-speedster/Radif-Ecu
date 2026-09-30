@@ -1,0 +1,13 @@
+# Dependencies — reinstalled inside the container via npm ci
+node_modules
+
+# Secrets — injected at runtime via env_file in docker-compose
+.env
+
+# Logs
+*.log
+npm-debug.log*
+
+# Version control
+.git
+.gitignore
