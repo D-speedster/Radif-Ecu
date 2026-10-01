@@ -74,7 +74,7 @@ export default function WikiPage() {
         <div className="text-center mb-12">
           <div className="flex items-center justify-center gap-3 mb-4">
             <BookOpen className="w-10 h-10 text-[var(--color-primary-light)]" />
-            <h1 className="text-3xl md:text-4xl font-bold text-white">
+            <h1 className="text-3xl md:text-4xl font-bold text-[var(--color-text)]">
               دانشنامه ECU
             </h1>
           </div>
@@ -95,7 +95,7 @@ export default function WikiPage() {
         {/* فیلتر دسته‌بندی */}
         {categories.length > 0 && (
           <div className="mb-12">
-            <h2 className="text-lg font-bold text-white mb-4">دسته‌بندی:</h2>
+            <h2 className="text-lg font-bold text-[var(--color-text)] mb-4">دسته‌بندی:</h2>
             <CategoryFilter
               categories={categories}
               selectedCategory={selectedCategory}

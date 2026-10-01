@@ -21,7 +21,7 @@ interface Appointment {
   carModel: string;
   date: string;
   time: string;
-  status: 'pending' | 'in-progress' | 'completed' | 'cancelled';
+  status: 'Pending' | 'In Progress' | 'Completed';
   trackingCode: string;
 }
 
@@ -55,10 +55,10 @@ export default function AdminDashboard() {
       // محاسبه آمار
       const today = new Date().toISOString().split('T')[0];
       const todayCount = appointments.filter((a: Appointment) => a.date === today).length;
-      const pendingCount = appointments.filter((a: Appointment) => a.status === 'pending').length;
+      const pendingCount = appointments.filter((a: Appointment) => a.status === 'Pending').length;
 
       // Fetch articles count
-      const articlesRes = await api.get('/articles');
+      const articlesRes = await api.get('/articles/admin/all');
       const articles = Array.isArray(articlesRes.data)
         ? articlesRes.data
         : (articlesRes.data.articles || []);
@@ -67,11 +67,11 @@ export default function AdminDashboard() {
       // Fetch messages (فرض: API برای messages موجود است)
       let messagesCount = 0;
       try {
-        const messagesRes = await api.get('/messages');
+        const messagesRes = await api.get('/contact');
         const messages = Array.isArray(messagesRes.data)
           ? messagesRes.data
           : (messagesRes.data.messages || []);
-        messagesCount = messages.filter((m: any) => m.status === 'new').length;
+        messagesCount = messages.filter((m: any) => m.status === 'New').length;
       } catch {
         // اگر API نباشد، 0 نشان بده
       }

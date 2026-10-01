@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Wrench, Phone, MapPin, Clock, ArrowLeft } from 'lucide-react';
+import { business, telHref } from '@/config/business';
 
 const QUICK_LINKS = [
   { href: '/',         label: 'صفحه اصلی' },
@@ -11,9 +12,9 @@ const QUICK_LINKS = [
 ];
 
 const CONTACT_ITEMS = [
-  { icon: Phone,  text: '۰۲۱-۱۲۳۴۵۶۷۸',             href: 'tel:02112345678' },
-  { icon: MapPin, text: 'تهران، خیابان ولیعصر',        href: null },
-  { icon: Clock,  text: 'شنبه تا پنجشنبه ۹ تا ۱۸',   href: null },
+  { icon: Phone,  text: business.phoneDisplay,             href: telHref },
+  { icon: MapPin, text: business.address,        href: null },
+  { icon: Clock,  text: business.hoursShort,   href: null },
 ];
 
 export default function Footer() {

@@ -11,6 +11,10 @@ connectDB();
 
 const app = express();
 
+// پشت Nginx/Docker/CDN: IP واقعی کاربر را از X-Forwarded-For بخوان (برای rate-limit)
+// 1 = یک proxy مورد اعتماد. اگر مستقیم و بدون proxy اجرا می‌کنید، TRUST_PROXY=0 بگذارید.
+app.set('trust proxy', Number(process.env.TRUST_PROXY ?? 1));
+
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 
 // CORS Configuration
@@ -24,8 +28,8 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: '100kb' }));
+app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 app.use(cookieParser());
 app.use((req, res, next) => {
   req.body   = mongoSanitize.sanitize(req.body);

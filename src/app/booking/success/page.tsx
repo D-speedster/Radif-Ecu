@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { CheckCircle, Copy, ArrowLeft, Phone } from 'lucide-react';
+import { telHref } from '@/config/business';
 
 function BookingSuccessContent() {
   const searchParams = useSearchParams();
@@ -43,7 +44,7 @@ function BookingSuccessContent() {
           </div>
 
           {/* عنوان */}
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold text-[var(--color-text)] mb-4">
             نوبت شما با موفقیت ثبت شد!
           </h1>
 
@@ -75,7 +76,7 @@ function BookingSuccessContent() {
 
           {/* اطلاعات اضافی */}
           <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-6 mb-8 text-right">
-            <h3 className="text-lg font-bold text-white mb-3">مراحل بعدی:</h3>
+            <h3 className="text-lg font-bold text-[var(--color-text)] mb-3">مراحل بعدی:</h3>
             <ul className="space-y-3 text-gray-300">
               <li className="flex items-start gap-2">
                 <span className="text-blue-400 mt-1">✓</span>
@@ -99,7 +100,7 @@ function BookingSuccessContent() {
                 مشاهده وضعیت نوبت
               </Button>
             </Link>
-            <a href="tel:02112345678" className="flex-1">
+            <a href={telHref} className="flex-1">
               <Button variant="secondary" size="lg" className="w-full">
                 <Phone className="w-5 h-5 ml-2" />
                 تماس با ما

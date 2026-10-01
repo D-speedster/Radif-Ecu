@@ -8,7 +8,7 @@ export default function ArticleNotFound() {
     <div className="min-h-screen bg-[var(--color-bg)] flex items-center justify-center px-4">
       <div className="text-center max-w-md">
         <FileQuestion className="w-20 h-20 text-[var(--color-muted)] mx-auto mb-6" />
-        <h1 className="text-3xl font-bold text-white mb-4">مقاله یافت نشد</h1>
+        <h1 className="text-3xl font-bold text-[var(--color-text)] mb-4">مقاله یافت نشد</h1>
         <p className="text-[var(--color-muted)] mb-8 leading-relaxed">
           متأسفانه مقاله مورد نظر شما یافت نشد. ممکن است حذف شده یا منتقل شده باشد.
         </p>

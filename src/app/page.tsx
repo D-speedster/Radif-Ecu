@@ -4,6 +4,8 @@ import WhyUsSection from '@/components/home/WhyUsSection';
 import LatestArticlesSection from '@/components/home/LatestArticlesSection';
 import CTASection from '@/components/home/CTASection';
 
+export const metadata = { alternates: { canonical: '/' } };
+
 export default function HomePage() {
   return (
     <>

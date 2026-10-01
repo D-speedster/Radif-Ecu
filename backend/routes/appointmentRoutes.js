@@ -7,9 +7,10 @@ const {
   getAppointmentByTracking,
 } = require('../controllers/appointmentController');
 const { protect, admin } = require('../middleware/authMiddleware');
+const { publicFormLimiter, honeypot } = require('../middleware/antiSpam');
 
 // Public
-router.post('/', createAppointment);
+router.post('/', publicFormLimiter, honeypot, createAppointment);
 // Must be declared before /:id to avoid Express treating "track" as an ObjectId
 router.get('/track/:code', getAppointmentByTracking);
 

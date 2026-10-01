@@ -16,10 +16,11 @@ interface Step2Props {
   onChange: (field: string, value: string) => void;
 }
 
+// ساعت کاری: ۱۲ تا ۲۰ (آخرین نوبت ۱۹:۳۰)
 const timeSlots = [
-  '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
   '12:00', '12:30', '13:00', '13:30', '14:00', '14:30',
   '15:00', '15:30', '16:00', '16:30', '17:00', '17:30',
+  '18:00', '18:30', '19:00', '19:30',
 ];
 
 export default function Step2DateTime({ formData, errors, onChange }: Step2Props) {
@@ -28,10 +29,17 @@ export default function Step2DateTime({ formData, errors, onChange }: Step2Props
     const days = [];
     const today = new Date();
     
-    for (let i = 1; i <= count; i++) {
+    // جمعه تعطیل است؛ تاریخ با ساعت محلی ساخته می‌شود (نه UTC)
+    let offset = 1;
+    while (days.length < count) {
       const date = new Date(today);
-      date.setDate(today.getDate() + i);
-      days.push(date.toISOString().split('T')[0]);
+      date.setDate(today.getDate() + offset);
+      offset++;
+      if (date.getDay() === 5) continue;
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      days.push(`${y}-${m}-${d}`);
     }
     
     return days;

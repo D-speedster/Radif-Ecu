@@ -10,6 +10,7 @@ import Badge from '@/components/ui/Badge';
 import { Search, Calendar, Clock, Car, Wrench, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import api from '@/lib/api';
 import { toJalali } from '@/lib/utils';
+import { telHref } from '@/config/business';
 
 interface Appointment {
   _id: string;
@@ -201,7 +202,7 @@ function TrackAppointmentContent() {
                   برای تغییر یا لغو نوبت، با ما تماس بگیرید:
                 </p>
                 <div className="text-center">
-                  <a href="tel:02112345678">
+                  <a href={telHref}>
                     <Button variant="secondary" size="lg">
                       ۰۲۱-۱۲۳۴۵۶۷۸
                     </Button>

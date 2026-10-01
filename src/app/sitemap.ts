@@ -1,7 +1,8 @@
 import { MetadataRoute } from 'next';
+import { business } from '@/config/business';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://radif-ecu.ir';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || business.url;
 
 // ⭐ تولید sitemap دینامیک
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -9,25 +10,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: SITE_URL,
-      lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 1,
     },
     {
+      url: `${SITE_URL}/remap`,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
       url: `${SITE_URL}/wiki`,
-      lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.9,
     },
     {
-      url: `${SITE_URL}/booking`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
       url: `${SITE_URL}/contact`,
-      lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.7,
     },
@@ -49,8 +46,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // صفحات مقالات
     const articlePages: MetadataRoute.Sitemap = articles
-      .filter((article: any) => article.isPublished)
-      .map((article: any) => ({
+      .filter((article: { published?: boolean }) => article.published !== false)
+      .map((article: { slug?: string; _id: string; updatedAt?: string; createdAt: string }) => ({
         url: `${SITE_URL}/wiki/${article.slug || article._id}`,
         lastModified: new Date(article.updatedAt || article.createdAt),
         changeFrequency: 'weekly' as const,

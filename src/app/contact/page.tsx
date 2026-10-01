@@ -7,6 +7,8 @@ import Textarea from '@/components/ui/Textarea';
 import Button from '@/components/ui/Button';
 import { Phone, Mail, MapPin, Clock, Send } from 'lucide-react';
 import api from '@/lib/api';
+import { track } from '@/lib/track';
+import { business, telHref } from '@/config/business';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -15,6 +17,7 @@ export default function ContactPage() {
     phone: '',
     subject: '',
     message: '',
+    website: '', // honeypot: باید خالی بماند
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -35,6 +38,7 @@ export default function ContactPage() {
 
     try {
       await api.post('/contact', formData);
+      track('generate_lead', { lead_type: 'contact' });
       setSuccess(true);
       setFormData({
         name: '',
@@ -42,6 +46,7 @@ export default function ContactPage() {
         phone: '',
         subject: '',
         message: '',
+        website: '',
       });
     } catch (err: any) {
       setError(err.response?.data?.message || 'خطا در ارسال پیام. لطفا دوباره تلاش کنید.');
@@ -54,25 +59,25 @@ export default function ContactPage() {
     {
       icon: Phone,
       title: 'تلفن تماس',
-      value: '۰۲۱-۱۲۳۴۵۶۷۸',
-      link: 'tel:02112345678',
+      value: business.phoneDisplay,
+      link: telHref,
     },
     {
       icon: Mail,
       title: 'ایمیل',
-      value: 'info@radif-ecu.ir',
-      link: 'mailto:info@radif-ecu.ir',
+      value: business.email,
+      link: `mailto:${business.email}`,
     },
     {
       icon: MapPin,
       title: 'آدرس',
-      value: 'تهران، خیابان ولیعصر، پلاک ۱۲۳',
+      value: business.address,
       link: null,
     },
     {
       icon: Clock,
       title: 'ساعت کاری',
-      value: 'شنبه تا پنج‌شنبه: ۹ صبح تا ۶ عصر',
+      value: business.hours,
       link: null,
     },
   ];
@@ -81,7 +86,7 @@ export default function ContactPage() {
     <div className="container mx-auto px-4 py-12 md:py-16">
       {/* هدر */}
       <div className="text-center mb-12">
-        <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
+        <h1 className="text-3xl md:text-4xl font-bold text-[var(--color-text)] mb-4">
           تماس با ما
         </h1>
         <p className="text-[var(--color-muted)] text-lg max-w-2xl mx-auto">
@@ -93,7 +98,7 @@ export default function ContactPage() {
         {/* فرم تماس */}
         <div className="lg:col-span-2">
           <Card>
-            <h2 className="text-2xl font-bold text-white mb-6">
+            <h2 className="text-2xl font-bold text-[var(--color-text)] mb-6">
               ارسال پیام
             </h2>
 
@@ -110,6 +115,16 @@ export default function ContactPage() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
+              <input
+                type="text"
+                name="website"
+                value={formData.website}
+                onChange={handleChange}
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
+              />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Input
                   label="نام و نام خانوادگی"
@@ -131,12 +146,11 @@ export default function ContactPage() {
               </div>
 
               <Input
-                label="ایمیل"
+                label="ایمیل (اختیاری)"
                 name="email"
                 type="email"
                 value={formData.email}
                 onChange={handleChange}
-                required
                 placeholder="your-email@example.com"
               />
 
@@ -184,7 +198,7 @@ export default function ContactPage() {
                     <Icon className="w-6 h-6 text-white" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-lg font-bold text-white mb-2">
+                    <h3 className="text-lg font-bold text-[var(--color-text)] mb-2">
                       {info.title}
                     </h3>
                     <p className="text-[var(--color-muted)] leading-relaxed">
@@ -206,7 +220,7 @@ export default function ContactPage() {
 
           {/* نقشه (می‌توانید بعدا Google Maps اضافه کنید) */}
           <Card>
-            <h3 className="text-lg font-bold text-white mb-4">
+            <h3 className="text-lg font-bold text-[var(--color-text)] mb-4">
               موقعیت روی نقشه
             </h3>
             <div className="bg-[var(--color-bg)] rounded-lg h-48 flex items-center justify-center">

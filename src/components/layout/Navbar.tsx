@@ -4,9 +4,11 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X, Wrench, Phone } from 'lucide-react';
+import { telHref } from '@/config/business';
 
 const NAV_LINKS = [
   { href: '/',        label: 'صفحه اصلی' },
+  { href: '/remap',   label: 'ریمپ ECU' },
   { href: '/wiki',    label: 'دانشنامه' },
   { href: '/booking', label: 'رزرو نوبت' },
   { href: '/contact', label: 'تماس با ما' },
@@ -132,7 +134,7 @@ export default function Navbar() {
                 style={{ backgroundColor: 'rgba(37,99,235,0.12)', border: '1px solid rgba(37,99,235,0.25)' }}
               >
                 <a
-                  href="tel:02112345678"
+                  href={telHref}
                   className="flex items-center gap-2 text-sm font-medium"
                   style={{ color: '#93C5FD' }}
                 >

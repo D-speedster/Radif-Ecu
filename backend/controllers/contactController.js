@@ -1,8 +1,11 @@
 const ContactMessage = require('../models/ContactMessage');
+const { normalizePhone } = require('../utils/normalize');
+const { notifyAdmin } = require('../utils/notify');
 
 const createContactMessage = async (req, res) => {
   try {
-    const { name, phone, subject, message } = req.body;
+    const { name, subject, message } = req.body;
+    const phone = normalizePhone(req.body.phone);
 
     if (!name || !phone || !subject || !message) {
       return res.status(400).json({
@@ -15,7 +18,7 @@ const createContactMessage = async (req, res) => {
       return res.status(400).json({ success: false, message: 'نام باید حداقل ۲ کاراکتر باشد' });
     }
 
-    if (!/^09\d{9}$/.test(phone.trim())) {
+    if (!/^09\d{9}$/.test(phone)) {
       return res.status(400).json({ success: false, message: 'شماره موبایل معتبر نیست (مثال: ۰۹۱۲XXXXXXX)' });
     }
 
@@ -26,9 +29,16 @@ const createContactMessage = async (req, res) => {
     // Save message to database
     const contactMessage = await ContactMessage.create({
       name: name.trim(),
-      phone: phone.trim(),
+      phone,
       subject: subject.trim(),
       message: message.trim(),
+    });
+
+    notifyAdmin('📩 پیام جدید از فرم تماس', {
+      'نام': contactMessage.name,
+      'موبایل': contactMessage.phone,
+      'موضوع': contactMessage.subject,
+      'پیام': contactMessage.message,
     });
 
     res.status(201).json({

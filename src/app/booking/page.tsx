@@ -9,6 +9,7 @@ import Step1PersonalInfo from '@/components/booking/Step1PersonalInfo';
 import Step2DateTime from '@/components/booking/Step2DateTime';
 import { ArrowRight, ArrowLeft, Loader2 } from 'lucide-react';
 import api from '@/lib/api';
+import { track } from '@/lib/track';
 
 interface FormData {
   name: string;
@@ -148,6 +149,8 @@ function BookingForm() {
       const response = await api.post('/appointments', payload);
       const trackingCode = response.data.trackingCode || response.data.appointment?.trackingCode;
       
+      track('generate_lead', { lead_type: 'booking', service: formData.serviceType });
+
       // هدایت به صفحه نمایش کد پیگیری
       router.push(`/booking/success?code=${trackingCode}`);
     } catch (error) {

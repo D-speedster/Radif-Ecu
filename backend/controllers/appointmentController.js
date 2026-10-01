@@ -1,5 +1,7 @@
 const crypto = require('crypto');
 const Appointment = require('../models/Appointment');
+const { normalizePhone } = require('../utils/normalize');
+const { notifyAdmin } = require('../utils/notify');
 
 const SERVICE_LABELS = {
   hardware: 'تعمیرات سخت‌افزار',
@@ -29,7 +31,8 @@ const getUniqueTrackingCode = async () => {
 
 const createAppointment = async (req, res) => {
   try {
-    const { name, phone, carModel, ecuModel, serviceType, date, timeSlot, notes } = req.body;
+    const { name, carModel, ecuModel, serviceType, date, timeSlot, notes } = req.body;
+    const phone = normalizePhone(req.body.phone);
 
     if (!name || !phone || !carModel || !serviceType || !date || !timeSlot) {
       return res.status(400).json({ success: false, message: 'فیلدهای اجباری: نام، شماره تماس، مدل خودرو، نوع خدمت، تاریخ و ساعت' });
@@ -42,7 +45,7 @@ const createAppointment = async (req, res) => {
 
     // Phone number format validation
     const phoneRegex = /^(\+98|0098|0)9\d{9}$/;
-    if (!phoneRegex.test(phone.trim())) {
+    if (!phoneRegex.test(phone)) {
       return res.status(400).json({
         success: false,
         message: 'شماره تماس معتبر نیست. مثال: ۰۹۱۲XXXXXXX',
@@ -73,7 +76,7 @@ const createAppointment = async (req, res) => {
 
     const appointmentData = {
       name:        name.trim(),
-      phone:       phone.trim(),
+      phone,
       carModel:    carModel.trim(),
       ecuModel:    (ecuModel || '').trim(),
       serviceType,
@@ -86,6 +89,17 @@ const createAppointment = async (req, res) => {
     if (req.user) appointmentData.user = req.user._id;
 
     const appointment = await Appointment.create(appointmentData);
+
+    notifyAdmin('📅 نوبت جدید', {
+      'نام': appointment.name,
+      'موبایل': appointment.phone,
+      'خودرو': appointment.carModel,
+      'خدمت': SERVICE_LABELS[appointment.serviceType],
+      'تاریخ': appointment.date,
+      'ساعت': appointment.timeSlot,
+      'توضیحات': appointment.notes,
+      'کد پیگیری': appointment.trackingCode,
+    });
 
     res.status(201).json({
       success: true,

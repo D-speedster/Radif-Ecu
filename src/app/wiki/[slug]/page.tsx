@@ -159,7 +159,7 @@ export default async function ArticlePage({
                 </div>
 
                 {/* عنوان */}
-                <h1 className="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight">
+                <h1 className="text-3xl md:text-4xl font-bold text-[var(--color-text)] mb-6 leading-tight">
                   {article.title}
                 </h1>
 
@@ -174,12 +174,12 @@ export default async function ArticlePage({
                 {/* محتوای مقاله */}
                 <div
                   className="prose prose-invert max-w-none
-                    prose-headings:text-white prose-headings:font-bold
+                    prose-headings:text-[var(--color-text)] prose-headings:font-bold
                     prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4
                     prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3
                     prose-p:text-[var(--color-text)] prose-p:leading-relaxed prose-p:mb-4
                     prose-a:text-[var(--color-primary-light)] prose-a:no-underline hover:prose-a:underline
-                    prose-strong:text-white prose-strong:font-bold
+                    prose-strong:text-[var(--color-text)] prose-strong:font-bold
                     prose-ul:text-[var(--color-text)] prose-ul:list-disc prose-ul:mr-6
                     prose-ol:text-[var(--color-text)] prose-ol:list-decimal prose-ol:mr-6
                     prose-li:mb-2
@@ -213,23 +213,23 @@ export default async function ArticlePage({
               <Card className="p-6 sticky top-24">
                 <div className="flex items-center gap-3 mb-6">
                   <BookOpen className="w-6 h-6 text-[var(--color-primary-light)]" />
-                  <h3 className="text-lg font-bold text-white">اطلاعات مقاله</h3>
+                  <h3 className="text-lg font-bold text-[var(--color-text)]">اطلاعات مقاله</h3>
                 </div>
 
                 <div className="space-y-4">
                   <div>
                     <p className="text-sm text-[var(--color-muted)] mb-1">دسته‌بندی:</p>
-                    <p className="text-white font-medium">{article.category}</p>
+                    <p className="text-[var(--color-text)] font-medium">{article.category}</p>
                   </div>
 
                   <div>
                     <p className="text-sm text-[var(--color-muted)] mb-1">تاریخ انتشار:</p>
-                    <p className="text-white font-medium">{toJalali(article.createdAt)}</p>
+                    <p className="text-[var(--color-text)] font-medium">{toJalali(article.createdAt)}</p>
                   </div>
 
                   <div>
                     <p className="text-sm text-[var(--color-muted)] mb-1">آخرین بروزرسانی:</p>
-                    <p className="text-white font-medium">{toJalali(article.updatedAt)}</p>
+                    <p className="text-[var(--color-text)] font-medium">{toJalali(article.updatedAt)}</p>
                   </div>
                 </div>
 

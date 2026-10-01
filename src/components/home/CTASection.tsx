@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Phone, CalendarCheck } from 'lucide-react';
+import { telHref } from '@/config/business';
 
 /* استایل مشترک هر دو دکمه */
 const BTN_BASE: React.CSSProperties = {
@@ -143,7 +144,7 @@ export default function CTASection() {
 
             {/* دکمه ثانوی — شیشه‌ای، دقیقاً هم‌اندازه */}
             <a
-              href="tel:02112345678"
+              href={telHref}
               style={{
                 ...BTN_BASE,
                 backgroundColor: 'rgba(255,255,255,0.08)',
