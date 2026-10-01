@@ -13,7 +13,11 @@ export const business = {
   hoursShort: 'شنبه تا پنج‌شنبه ۱۲ تا ۲۰',
   opens: '12:00',
   closes: '20:00',
-  url: 'https://radif-ecu.ir',         // ⚠️ فقط اگر دامنه واقعاً مال شماست
+  url: 'https://radif-ecu.ir',
+
+  // ادعاهای اعتمادساز: فقط اگر واقعی و قابل اثبات‌اند پر کنید. خالی = در سایت نمایش داده نمی‌شود.
+  experience: '',   // مثال: 'بیش از ۱۰ سال تجربه'
+  warranty: '',     // مثال: 'ضمانت کتبی' (شرایط دقیق را در src/content/remap.ts بنویسید)         // ⚠️ فقط اگر دامنه واقعاً مال شماست
 } as const;
 
 export const telHref = `tel:${business.phone}`;

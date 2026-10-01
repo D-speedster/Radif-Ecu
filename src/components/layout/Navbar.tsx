@@ -9,6 +9,7 @@ import { telHref } from '@/config/business';
 const NAV_LINKS = [
   { href: '/',        label: 'صفحه اصلی' },
   { href: '/remap',   label: 'ریمپ ECU' },
+  { href: '/repair-ecu', label: 'تعمیر ECU' },
   { href: '/wiki',    label: 'دانشنامه' },
   { href: '/booking', label: 'رزرو نوبت' },
   { href: '/contact', label: 'تماس با ما' },

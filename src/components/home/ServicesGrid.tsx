@@ -1,30 +1,35 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { Cpu, Zap, Search, GitBranch, Wrench } from 'lucide-react';
 
 const SERVICES = [
   {
     icon: Cpu,
     title: 'تعمیر ECU',
+    href: '/repair-ecu',
     description: 'تعمیر برد و سخت‌افزار ECU خودرو',
     accent: '#2563EB',
   },
   {
     icon: Zap,
     title: 'ریمپ ECU',
+    href: '/remap',
     description: 'افزایش قدرت و بهینه‌سازی نرم‌افزار',
     accent: '#0EA5E9',
   },
   {
     icon: Search,
     title: 'دیاگ تخصصی',
+    href: '/booking',
     description: 'عیب‌یابی دقیق با تجهیزات پیشرفته',
     accent: '#6366F1',
   },
   {
     icon: GitBranch,
     title: 'مالتی‌پلکس',
+    href: '/booking',
     description: 'تعمیر سیستم‌های الکترونیکی خودرو',
     accent: '#0284C7',
   },
@@ -105,7 +110,7 @@ export default function ServicesGrid() {
         <SectionHeader
           badge="خدمات تخصصی ما"
           title="خدمات اصلی"
-          subtitle="با تجهیزات حرفه‌ای و تجربه بیش از ۱۰ سال، تعمیر و بهینه‌سازی ECU خودروی شما را به بهترین شکل انجام می‌دهیم."
+          subtitle="تعمیر ECU، ریمپ، دیاگ و مالتی‌پلکس خودرو؛ برای مشاوره تماس بگیرید یا در واتساپ پیام بدهید."
         />
 
         <div
@@ -115,9 +120,12 @@ export default function ServicesGrid() {
           {SERVICES.map((service, index) => {
             const Icon = service.icon;
             return (
-              <div
+              <Link
+                href={service.href}
                 key={index}
                 style={{
+                  display: 'block',
+                  textDecoration: 'none',
                   backgroundColor: '#F8FAFC',
                   border: '1px solid #E2E8F0',
                   borderRadius: '12px',
@@ -173,7 +181,7 @@ export default function ServicesGrid() {
                 >
                   {service.description}
                 </p>
-              </div>
+              </Link>
             );
           })}
         </div>

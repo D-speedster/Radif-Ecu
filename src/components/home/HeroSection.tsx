@@ -2,13 +2,15 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { business } from '@/config/business';
 import { ArrowLeft, CheckCircle2, Cpu } from 'lucide-react';
 import Image from 'next/image';
 
 const TRUST_ITEMS = [
-  { text: 'تجهیزات تخصصی',        short: 'تجهیزات تخصصی' },
-  { text: 'بیش از ۱۰ سال تجربه',  short: '+۱۰ سال تجربه'  },
-  { text: 'ضمانت کتبی',            short: 'ضمانت کتبی'     },
+  { text: 'پاسخ‌گویی در تلفن و واتساپ', short: 'تلفن و واتساپ' },
+  { text: 'رزرو آنلاین نوبت', short: 'رزرو آنلاین' },
+  ...(business.experience ? [{ text: business.experience, short: business.experience }] : []),
+  ...(business.warranty ? [{ text: business.warranty, short: business.warranty }] : []),
 ];
 
 export default function HeroSection() {
@@ -63,7 +65,7 @@ export default function HeroSection() {
               }}
             >
               <Cpu style={{ width: '13px', height: '13px' }} />
-              تخصصی‌ترین مرکز تعمیر ECU تهران
+              ریمپ و تعمیر ECU در تهران
             </div>
 
             {/* عنوان اصلی */}
@@ -76,7 +78,7 @@ export default function HeroSection() {
                 marginBottom: '0.85rem',
               }}
             >
-              <span style={{ fontWeight: 700 }}>تعمیر تخصصی </span>
+              <span style={{ fontWeight: 700 }}>ریمپ و تعمیر </span>
               <span style={{
                 fontWeight: 900,
                 fontSize: '1.1em',
@@ -84,7 +86,7 @@ export default function HeroSection() {
               }}>ECU</span>
               <br />
               <span style={{ fontWeight: 500, fontSize: '0.82em', color: '#4A5568' }}>
-                و برق خودرو در تهران
+                خودرو در تهران
               </span>
             </h1>
 
@@ -106,7 +108,7 @@ export default function HeroSection() {
                 ریمپ، دیاگ و تعمیرات تخصصی ECU
               </span>
               <span className="hidden md:inline">
-                عیب‌یابی، تعمیر برد، پروگرام و ریمپ ECU با تجهیزات حرفه‌ای و بیش از ۱۰ سال تجربه
+                ریمپ، تعمیر برد، پروگرام، مالتی‌پلکس و عیب‌یابی ECU خودرو
               </span>
             </p>
 
@@ -118,7 +120,7 @@ export default function HeroSection() {
             >
               {/* دکمه اصلی — آبی */}
               <Link
-                href="/booking"
+                href="/remap"
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -146,7 +148,7 @@ export default function HeroSection() {
                   e.currentTarget.style.boxShadow = '0 2px 12px rgba(37,99,235,0.3)';
                 }}
               >
-                رزرو نوبت تعمیر
+                درخواست مشاوره ریمپ
                 <ArrowLeft style={{ width: '16px', height: '16px' }} />
               </Link>
 

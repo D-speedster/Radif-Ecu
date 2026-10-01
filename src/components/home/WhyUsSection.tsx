@@ -1,38 +1,31 @@
 'use client';
 
 import React from 'react';
+import { business } from '@/config/business';
 import { Award, Shield, Zap, Users, Wrench } from 'lucide-react';
 
 /* ترتیب: مهم‌ترین اول — سمت راست در RTL */
 const FEATURES = [
   {
     id: 1,
-    icon: Award,
-    title: 'تجربه و تخصص',
-    description: 'بیش از ۱۰ سال فعالیت تخصصی در حوزه تعمیر و برنامه‌نویسی ECU',
-    accent: '#2563EB',
+    icon: Users,
+    title: 'مشاوره قبل از اقدام',
+    description: 'مشکل خودرو را قبل از هر اقدام با شما بررسی می‌کنیم. تماس یا پیام در واتساپ بدهید.',
+    accent: '#6366F1',
   },
   {
     id: 2,
-    icon: Shield,
-    title: 'تضمین کیفیت',
-    description: 'گارانتی معتبر کتبی برای تمام خدمات ارائه شده',
-    accent: '#0284C7',
-  },
-  {
-    id: 3,
     icon: Zap,
-    title: 'سرعت در انجام',
-    description: 'کمترین زمان انتظار با بالاترین سطح کیفیت ممکن',
+    title: 'رزرو آنلاین نوبت',
+    description: 'نوبت را آنلاین رزرو کنید و با کد پیگیری وضعیت آن را ببینید.',
     accent: '#0EA5E9',
   },
-  {
-    id: 4,
-    icon: Users,
-    title: 'مشاوره رایگان',
-    description: 'قبل از هر اقدام، مشکل خودرو را با شما بررسی می‌کنیم. تماس یا پیام در واتساپ بدهید.',
-    accent: '#6366F1',
-  },
+  ...(business.experience
+    ? [{ id: 3, icon: Award, title: 'تجربه و تخصص', description: business.experience, accent: '#2563EB' }]
+    : []),
+  ...(business.warranty
+    ? [{ id: 4, icon: Shield, title: 'ضمانت', description: business.warranty, accent: '#0284C7' }]
+    : []),
 ];
 
 /* ── Header pattern مشترک — دقیقاً همان ServicesGrid ── */

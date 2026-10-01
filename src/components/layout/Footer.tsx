@@ -56,7 +56,7 @@ export default function Footer() {
 
             {/* توضیح */}
             <p style={{ fontSize: '13px', color: '#64748B', lineHeight: '1.75', marginBottom: '20px' }}>
-              تعمیرات تخصصی ECU، ریمپ، مالتی‌پلکس و دیاگ خودرو با بیش از ۱۰ سال تجربه در تهران
+              تعمیرات ECU، ریمپ، مالتی‌پلکس و دیاگ خودرو در تهران
             </p>
 
             {/* CTA کوچک */}
