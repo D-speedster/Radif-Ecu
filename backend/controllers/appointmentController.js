@@ -6,7 +6,7 @@ const { notifyAdmin } = require('../utils/notify');
 const SERVICE_LABELS = {
   hardware: 'تعمیرات سخت‌افزار',
   remap:    'ریمپ تخصصی',
-  network:  'عیب‌یابی شبکه',
+  network:  'مالتی‌پلکس، دیاگ و عیب‌یابی',
 };
 
 const generateTrackingCode = () =>
@@ -224,7 +224,20 @@ const getAppointmentByTracking = async (req, res) => {
   }
 };
 
+const deleteAppointment = async (req, res) => {
+  try {
+    const appt = await Appointment.findByIdAndDelete(req.params.id);
+    if (!appt) return res.status(404).json({ success: false, message: 'نوبت مورد نظر یافت نشد' });
+    res.status(200).json({ success: true, message: 'نوبت حذف شد', deletedId: req.params.id });
+  } catch (error) {
+    if (error.name === 'CastError') return res.status(400).json({ success: false, message: 'شناسه نامعتبر است' });
+    console.error('deleteAppointment Error:', error.message);
+    res.status(500).json({ success: false, message: 'خطای سرور. لطفاً دوباره تلاش کنید.' });
+  }
+};
+
 module.exports = {
+  deleteAppointment,
   createAppointment,
   getAppointments,
   updateAppointmentStatus,

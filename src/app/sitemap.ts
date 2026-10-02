@@ -1,10 +1,13 @@
 import { MetadataRoute } from 'next';
 import { business } from '@/config/business';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+const API_URL = process.env.INTERNAL_API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || business.url;
 
 // ⭐ تولید sitemap دینامیک
+// هر بار هنگام درخواست از بکاند خوانده شود (نه یک بار هنگام build که بکاند بالا نیست)
+export const dynamic = 'force-dynamic';
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // صفحات استاتیک
   const staticPages: MetadataRoute.Sitemap = [

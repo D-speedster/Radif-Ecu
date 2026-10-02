@@ -45,14 +45,14 @@
 
 :root {
   /* ── پایه صفحه ── */
-  --color-bg: #F0F2F5;              /* نقره‌ای بسیار کم‌رنگ — نه سفید خالص */
+  --color-bg: #F4F5F6;              /* نقره‌ای بسیار کم‌رنگ — نه سفید خالص */
   --color-surface: #FFFFFF;         /* کارت‌ها و پنل‌ها روی پس‌زمینه */
   --color-surface-2: #E8EBF0;       /* سطح دوم، hover */
   --color-border: #D8DCE3;          /* بوردر */
   --color-divider: #C8CDD6;         /* خط جداکننده */
 
   /* ── Navbar / Header ── */
-  --color-nav-bg: #16213E;          /* سرمه‌ای تیره — charcoal متالیک */
+  --color-nav-bg: #0E1621;          /* سرمه‌ای تیره — charcoal متالیک */
   --color-nav-text: #E8ECF4;        /* متن لینک‌های navbar */
   --color-nav-text-hover: #FFFFFF;
   --color-nav-border: #1E2D4F;
@@ -63,14 +63,14 @@
   --color-text-muted: #718096;
 
   /* ── Accent آبی برقی (ECU/Tech) ── */
-  --color-accent: #2563EB;          /* آبی برقی — تم فنی */
-  --color-accent-hover: #1D4ED8;
-  --color-accent-light: #DBEAFE;    /* پس‌زمینه badge آبی */
+  --color-accent: #B45309;          /* amber تیره برای متن روی پس‌زمینهٔ روشن */
+  --color-accent-hover: #92400E;
+  --color-accent-light: #FEF3C7;    /* پس‌زمینه badge */
 
   /* ── دکمه اصلی ── */
-  --color-btn-primary: #16213E;     /* charcoal */
-  --color-btn-hover: #1E2D4F;
-  --color-btn-text: #FFFFFF;
+  --color-btn-primary: #FFB020;     /* amber چراغ هشدار */
+  --color-btn-hover: #FFC44D;
+  --color-btn-text: #1A1300;
 
   /* ── وضعیت ── */
   --color-success: #16A34A;
@@ -79,8 +79,21 @@
 
   /* ── نام‌های مستعار (قبلاً در کد استفاده می‌شدند ولی تعریف نشده بودند) ── */
   --color-muted: #5F6B7A;
-  --color-primary: #16213E;
-  --color-primary-light: #1E2D4F;
+  --color-primary: #0E1621;
+  --color-primary-light: #17232F;
+
+  /* ── هویت بصری: جوهری + amber ── */
+  --ink: #0E1621;
+  --ink-2: #17232F;
+  --amber: #FFB020;
+  --amber-hover: #FFC44D;
+  --on-amber: #1A1300;
+  --steel: #DADFE4;
+}
+
+:focus-visible {
+  outline: 3px solid var(--amber);
+  outline-offset: 2px;
 }
 
 * {

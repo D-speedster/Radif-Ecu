@@ -3,15 +3,14 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Wrench, Phone } from 'lucide-react';
-import { telHref } from '@/config/business';
+import { Menu, X, Phone } from 'lucide-react';
+import { business, telHref } from '@/config/business';
 
 const NAV_LINKS = [
-  { href: '/',        label: 'صفحه اصلی' },
-  { href: '/remap',   label: 'ریمپ ECU' },
+  { href: '/', label: 'صفحه اصلی' },
+  { href: '/remap', label: 'ریمپ ECU' },
   { href: '/repair-ecu', label: 'تعمیر ECU' },
-  { href: '/wiki',    label: 'دانشنامه' },
-  { href: '/booking', label: 'رزرو نوبت' },
+  { href: '/wiki', label: 'دانشنامه' },
   { href: '/contact', label: 'تماس با ما' },
 ];
 
@@ -22,33 +21,21 @@ export default function Navbar() {
   return (
     <nav
       className="sticky top-0 z-50"
-      style={{
-        backgroundColor: '#16213E',
-        borderBottom: '1px solid #1E2D4F',
-        boxShadow: '0 2px 12px rgba(0,0,0,0.25)',
-        fontFamily: 'YekanBakh, sans-serif',
-      }}
+      style={{ background: 'var(--ink)', borderBottom: '1px solid rgba(255,255,255,0.08)', fontFamily: 'YekanBakh, sans-serif' }}
     >
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16 md:h-[68px]">
-
-          {/* ── لوگو (راست) ── */}
-          <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0">
-            <div
-              className="flex items-center justify-center w-9 h-9 rounded-lg transition-colors"
-              style={{ backgroundColor: '#2563EB' }}
-            >
-              <Wrench className="w-5 h-5" style={{ color: '#FFFFFF' }} />
-            </div>
+        <div className="flex items-center justify-between h-16">
+          <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
             <span
-              className="text-lg md:text-xl font-bold tracking-tight"
-              style={{ color: '#FFFFFF', letterSpacing: '-0.01em' }}
+              className="inline-flex items-center justify-center w-9 h-9 rounded-md font-black text-sm"
+              style={{ background: 'var(--amber)', color: 'var(--on-amber)' }}
+              aria-hidden="true"
             >
-              ردیف ایسیو
+              ECU
             </span>
+            <span className="text-lg font-extrabold text-white">ردیف ایسیو</span>
           </Link>
 
-          {/* ── لینک‌های دسکتاپ (چپ) ── */}
           <div className="hidden md:flex items-center gap-1">
             {NAV_LINKS.map((link) => {
               const active = pathname === link.href;
@@ -56,101 +43,53 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="px-4 py-2 rounded-lg text-sm font-medium transition-all"
+                  className="px-3 py-2 text-sm font-medium"
                   style={{
-                    color:           active ? '#FFFFFF' : '#A8B4CC',
-                    backgroundColor: active ? 'rgba(37,99,235,0.18)' : 'transparent',
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!active) e.currentTarget.style.color = '#FFFFFF';
-                    if (!active) e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.07)';
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!active) e.currentTarget.style.color = '#A8B4CC';
-                    if (!active) e.currentTarget.style.backgroundColor = 'transparent';
+                    color: active ? '#fff' : 'rgba(255,255,255,0.65)',
+                    borderBottom: `2px solid ${active ? 'var(--amber)' : 'transparent'}`,
                   }}
                 >
                   {link.label}
                 </Link>
               );
             })}
-
-            {/* دکمه رزرو */}
-            <Link
-              href="/booking"
-              className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all mr-2"
-              style={{
-                backgroundColor: '#2563EB',
-                color: '#FFFFFF',
-                border: 'none',
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1D4ED8'}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#2563EB'}
+            <a
+              href={telHref}
+              className="mr-3 inline-flex items-center gap-2 px-4 h-10 rounded-lg text-sm font-bold"
+              style={{ background: 'var(--amber)', color: 'var(--on-amber)' }}
             >
-              رزرو نوبت
-            </Link>
+              <Phone className="w-4 h-4" />
+              {business.phoneDisplay}
+            </a>
           </div>
 
-          {/* ── همبرگر موبایل (چپ) ── */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-lg transition-colors"
-            style={{ color: '#E8ECF4' }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.1)'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-            aria-label="Toggle menu"
+            className="md:hidden p-2 rounded-lg text-white"
+            aria-label="باز و بسته کردن منو"
+            aria-expanded={isOpen}
           >
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
 
-        {/* ── منوی موبایل ── */}
         {isOpen && (
-          <div
-            className="md:hidden py-3 pb-4"
-            style={{ borderTop: '1px solid #1E2D4F' }}
-          >
-            <div className="flex flex-col gap-1">
-              {NAV_LINKS.map((link) => {
-                const active = pathname === link.href;
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setIsOpen(false)}
-                    className="px-4 py-3 rounded-lg text-sm font-medium transition-all text-right"
-                    style={{
-                      color:           active ? '#FFFFFF' : '#A8B4CC',
-                      backgroundColor: active ? 'rgba(37,99,235,0.18)' : 'transparent',
-                    }}
-                  >
-                    {link.label}
-                  </Link>
-                );
-              })}
-
-              {/* اطلاعات تماس موبایل */}
-              <div
-                className="flex items-center justify-between mt-3 px-4 py-3 rounded-lg"
-                style={{ backgroundColor: 'rgba(37,99,235,0.12)', border: '1px solid rgba(37,99,235,0.25)' }}
-              >
-                <a
-                  href={telHref}
-                  className="flex items-center gap-2 text-sm font-medium"
-                  style={{ color: '#93C5FD' }}
-                >
-                  <Phone className="w-4 h-4" />
-                  ۰۲۱-۱۲۳۴۵۶۷۸
-                </a>
+          <div className="md:hidden pb-4" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+            <div className="flex flex-col pt-2">
+              {[...NAV_LINKS, { href: '/booking', label: 'رزرو نوبت' }].map((link) => (
                 <Link
-                  href="/booking"
+                  key={link.href}
+                  href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className="px-4 py-1.5 rounded-lg text-sm font-semibold"
-                  style={{ backgroundColor: '#2563EB', color: '#FFFFFF' }}
+                  className="px-2 py-3 text-base font-medium"
+                  style={{
+                    color: pathname === link.href ? 'var(--amber)' : 'rgba(255,255,255,0.8)',
+                    borderBottom: '1px solid rgba(255,255,255,0.06)',
+                  }}
                 >
-                  رزرو نوبت
+                  {link.label}
                 </Link>
-              </div>
+              ))}
             </div>
           </div>
         )}

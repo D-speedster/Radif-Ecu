@@ -1,5 +1,9 @@
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 const Article = require('../models/Article');
+const User = require('../models/User');
+const { uniqueSlug } = require('../utils/slug');
+const { cleanHtml, toPlainText } = require('../utils/sanitizeHtml');
 
 // Silently check httpOnly cookie token — used on soft-auth routes
 const isRequestAuthenticated = (req) => {
@@ -13,12 +17,29 @@ const isRequestAuthenticated = (req) => {
   }
 };
 
+// آیا درخواست از طرف ادمین است؟ (برای دیدن پیش‌نویس‌ها)
+const isRequestAdmin = async (req) => {
+  const token = req.cookies?.token;
+  if (!token) return false;
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id);
+    return !!user && user.role === 'admin';
+  } catch {
+    return false;
+  }
+};
+
 // Strip downloadUrl from private articles for unauthenticated responses
 const sanitiseForGuest = (article) => {
   const obj = article.toObject();
   if (obj.isPrivate) {
     obj.downloadUrl = null;
     obj.downloadLocked = true;
+    // محتوای کامل مقالهٔ خصوصی برای مهمان ارسال نمی‌شود؛ فقط پیش‌نمایش کوتاه
+    const preview = toPlainText(obj.content).slice(0, 300);
+    obj.content = `<p>${preview}${preview.length >= 300 ? '…' : ''}</p>`;
+    obj.contentLocked = true;
   }
   return obj;
 };
@@ -51,9 +72,44 @@ const getArticles = async (req, res) => {
   }
 };
 
+// همهٔ مقالات (با پیش‌نویس) — فقط ادمین
+const getAllArticlesAdmin = async (req, res) => {
+  try {
+    const articles = await Article.find({}).sort({ createdAt: -1 });
+    res.status(200).json({ success: true, count: articles.length, articles });
+  } catch (error) {
+    console.error('getAllArticlesAdmin Error:', error.message);
+    res.status(500).json({ success: false, message: 'خطای سرور. لطفاً دوباره تلاش کنید.' });
+  }
+};
+
+// یک مقاله با slug یا _id
+const getArticleByKey = async (req, res) => {
+  try {
+    const key = req.params.idOrSlug;
+    const query = mongoose.isValidObjectId(key) ? { $or: [{ slug: key }, { _id: key }] } : { slug: key };
+    const article = await Article.findOne(query);
+    const isAdmin = await isRequestAdmin(req);
+
+    if (!article || (!article.published && !isAdmin)) {
+      return res.status(404).json({ success: false, message: 'مقاله مورد نظر یافت نشد' });
+    }
+
+    const authenticated = isRequestAuthenticated(req);
+    res.status(200).json({
+      success: true,
+      authenticated,
+      article: authenticated ? article.toObject() : sanitiseForGuest(article),
+    });
+  } catch (error) {
+    console.error('getArticleByKey Error:', error.message);
+    res.status(500).json({ success: false, message: 'خطای سرور. لطفاً دوباره تلاش کنید.' });
+  }
+};
+
 const createArticle = async (req, res) => {
   try {
-    const { title, content, category, downloadUrl, isPrivate, published } = req.body;
+    const { title, content, category, downloadUrl, isPrivate, published, excerpt, slug } = req.body;
 
     if (!title || !category) {
       return res.status(400).json({ success: false, message: 'عنوان و دسته‌بندی الزامی هستند' });
@@ -66,7 +122,9 @@ const createArticle = async (req, res) => {
 
     const article = await Article.create({
       title:       title.trim(),
-      content:     (content || '').trim(),
+      slug:        await uniqueSlug(Article, slug || title),
+      excerpt:     (excerpt || '').trim(),
+      content:     cleanHtml((content || '').trim()),
       category,
       downloadUrl: downloadUrl ? downloadUrl.trim() : null,
       isPrivate:   isPrivate  !== undefined ? Boolean(isPrivate)  : true,
@@ -82,9 +140,13 @@ const createArticle = async (req, res) => {
 
 const updateArticle = async (req, res) => {
   try {
-    const allowed = ['title', 'content', 'category', 'downloadUrl', 'isPrivate', 'published'];
+    const allowed = ['title', 'content', 'category', 'downloadUrl', 'isPrivate', 'published', 'excerpt'];
     const updates = {};
     allowed.forEach((f) => { if (req.body[f] !== undefined) updates[f] = req.body[f]; });
+
+    if (updates.content) updates.content = cleanHtml(updates.content);
+
+    if (req.body.slug) updates.slug = await uniqueSlug(Article, req.body.slug, req.params.id);
 
     if (!Object.keys(updates).length) {
       return res.status(400).json({ success: false, message: 'هیچ فیلدی برای به‌روزرسانی ارسال نشده است' });
@@ -121,4 +183,4 @@ const deleteArticle = async (req, res) => {
   }
 };
 
-module.exports = { getArticles, createArticle, updateArticle, deleteArticle };
+module.exports = { getArticles, getAllArticlesAdmin, getArticleByKey, createArticle, updateArticle, deleteArticle };

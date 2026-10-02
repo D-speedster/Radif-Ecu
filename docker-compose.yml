@@ -38,6 +38,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        # مرورگر با همان دامنه به /api می‌زند و Next.js آن را به بکاند می‌فرستد
+        NEXT_PUBLIC_API_URL: /api
+        NEXT_PUBLIC_SITE_URL: https://radif-ecu.ir
+        NEXT_PUBLIC_GTM_ID: ""   # ← GTM-XXXXXXX
+        BACKEND_ORIGIN: http://backend:5000
     container_name: radif-frontend
     restart: unless-stopped
     networks:
@@ -45,7 +51,8 @@ services:
     ports:
       - "127.0.0.1:3000:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://backend:5000/api
+      # برای درخواست‌های سمت سرور Next.js (sitemap، صفحهٔ مقاله)
+      - INTERNAL_API_URL=http://backend:5000/api
     depends_on:
       - backend
 

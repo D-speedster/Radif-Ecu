@@ -24,18 +24,17 @@ interface Appointment {
   carModel: string;
   serviceType: string;
   date: string;
-  time: string;
+  timeSlot: string;
   description?: string;
   trackingCode: string;
-  status: 'pending' | 'in-progress' | 'completed' | 'cancelled';
+  status: 'Pending' | 'In Progress' | 'Completed';
   createdAt: string;
 }
 
 const statusConfig = {
-  pending: { label: 'در انتظار', color: 'yellow' as const },
-  'in-progress': { label: 'در حال انجام', color: 'blue' as const },
-  completed: { label: 'انجام شده', color: 'green' as const },
-  cancelled: { label: 'لغو شده', color: 'red' as const },
+  Pending: { label: 'در انتظار', color: 'yellow' as const },
+  'In Progress': { label: 'در حال انجام', color: 'blue' as const },
+  Completed: { label: 'انجام شده', color: 'green' as const },
 };
 
 const serviceTypeLabels: Record<string, string> = {
@@ -45,7 +44,7 @@ const serviceTypeLabels: Record<string, string> = {
   dump: 'خواندن/نوشتن دامپ',
 };
 
-type StatusFilter = 'all' | 'pending' | 'in-progress' | 'completed' | 'cancelled';
+type StatusFilter = 'all' | 'Pending' | 'In Progress' | 'Completed';
 
 export default function AppointmentsPage() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -251,7 +250,7 @@ export default function AppointmentsPage() {
                     </div>
                     <div className="flex items-center gap-2 text-sm" style={{ color: '#252525' }}>
                       <Clock className="w-4 h-4" style={{ color: '#7D7D7D' }} />
-                      <span>{appointment.time}</span>
+                      <span>{appointment.timeSlot}</span>
                     </div>
                   </div>
 
@@ -292,10 +291,9 @@ export default function AppointmentsPage() {
                       color: '#252525'
                     }}
                   >
-                    <option value="pending">در انتظار</option>
-                    <option value="in-progress">در حال انجام</option>
-                    <option value="completed">انجام شده</option>
-                    <option value="cancelled">لغو شده</option>
+                    <option value="Pending">در انتظار</option>
+                    <option value="In Progress">در حال انجام</option>
+                    <option value="Completed">انجام شده</option>
                   </select>
 
                   <button

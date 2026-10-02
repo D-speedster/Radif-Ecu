@@ -32,7 +32,7 @@ module.exports = {
         warning: '#F59E0B',         // نارنجی
       },
       fontFamily: {
-        sans: ['Vazirmatn', 'sans-serif'],
+        sans: ['YekanBakh', 'Tahoma', 'sans-serif'],
       },
     },
   },

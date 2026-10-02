@@ -21,10 +21,10 @@ export interface Appointment {
   carModel: string;
   serviceType: string;
   date: string;
-  time: string;
+  timeSlot: string;
   description?: string;
   trackingCode: string;
-  status: 'pending' | 'in-progress' | 'completed' | 'cancelled';
+  status: 'Pending' | 'In Progress' | 'Completed';
   createdAt: string;
 }
 
@@ -36,7 +36,7 @@ export interface Contact {
   phone: string;
   subject: string;
   message: string;
-  status: 'new' | 'read' | 'replied';
+  status: 'New' | 'Read' | 'Replied';
   createdAt: string;
 }
 

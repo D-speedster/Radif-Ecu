@@ -7,8 +7,6 @@ import Analytics from "@/components/analytics/Analytics";
 import StickyContactBar from "@/components/layout/StickyContactBar";
 import { business } from "@/config/business";
 
-// استفاده از فونت Vazirmatn از CDN
-// در production بهتر است فونت‌ها را لوکال هاست کنید
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || business.url),
@@ -57,10 +55,6 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl">
       <head>
-        <link
-          href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css"
-          rel="stylesheet"
-        />
         {/* Schema Markup */}
         <script
           type="application/ld+json"

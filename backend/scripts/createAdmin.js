@@ -1,58 +1,56 @@
 /**
- * Create Admin User Script
- * Usage: node scripts/createAdmin.js
+ * ساخت کاربر ادمین
+ *
+ * استفاده (رمز و شناسه را خودتان بدهید؛ رمز پیش‌فرض عمومی وجود ندارد):
+ *   ADMIN_IDENTIFIER=you@example.com ADMIN_PASSWORD='یک-رمز-قوی' node scripts/createAdmin.js
+ *
+ * ویندوز (PowerShell):
+ *   $env:ADMIN_IDENTIFIER="you@example.com"; $env:ADMIN_PASSWORD="رمز-قوی-خودتان"; node scripts/createAdmin.js
+ *
+ * اگر ADMIN_PASSWORD ندهید، یک رمز تصادفی ساخته و فقط یک‌بار چاپ می‌شود.
  */
 
 require('dotenv').config();
+const crypto = require('crypto');
 const mongoose = require('mongoose');
 const User = require('../models/User');
 
-const ADMIN_CREDENTIALS = {
-  name: 'مدیر سیستم',
-  identifier: 'admin@radif.local',
-  phone: '09123456789',
-  password: 'Admin@1234',  // Change this password immediately after first login!
-  role: 'admin',
-};
+const identifier = (process.env.ADMIN_IDENTIFIER || '').trim().toLowerCase();
+const generated = !process.env.ADMIN_PASSWORD;
+const password = process.env.ADMIN_PASSWORD || crypto.randomBytes(12).toString('base64url');
 
 async function createAdmin() {
+  if (!identifier) {
+    console.error('❌ ADMIN_IDENTIFIER را تنظیم کنید (ایمیل یا شماره موبایل ادمین).');
+    process.exit(1);
+  }
+  if (password.length < 8) {
+    console.error('❌ رمز عبور باید حداقل ۸ کاراکتر باشد.');
+    process.exit(1);
+  }
+
   try {
-    // Connect to database
     await mongoose.connect(process.env.MONGO_URI);
     console.log('✅ Connected to MongoDB');
 
-    // Check if admin already exists
-    const existingAdmin = await User.findOne({ identifier: ADMIN_CREDENTIALS.identifier });
-    
-    if (existingAdmin) {
-      console.log('⚠️  Admin user already exists:');
-      console.log(`   Name: ${existingAdmin.name}`);
-      console.log(`   Identifier: ${existingAdmin.identifier}`);
-      console.log(`   Role: ${existingAdmin.role}`);
-      
-      // Update to admin role if not already
-      if (existingAdmin.role !== 'admin') {
-        existingAdmin.role = 'admin';
-        await existingAdmin.save();
-        console.log('✅ Updated user role to admin');
+    const existing = await User.findOne({ identifier });
+    if (existing) {
+      if (existing.role !== 'admin') {
+        existing.role = 'admin';
+        await existing.save();
+        console.log('✅ کاربر موجود به ادمین ارتقا یافت (رمز تغییر نکرد).');
+      } else {
+        console.log('⚠️  این ادمین از قبل وجود دارد. رمز تغییر نکرد.');
       }
-      
       process.exit(0);
     }
 
-    // Create new admin
-    const admin = await User.create(ADMIN_CREDENTIALS);
-
-    console.log('\n✅ Admin user created successfully!\n');
-    console.log('┌─────────────────────────────────────────┐');
-    console.log('│   Admin Credentials                     │');
-    console.log('├─────────────────────────────────────────┤');
-    console.log(`│ Identifier: ${ADMIN_CREDENTIALS.identifier.padEnd(24)} │`);
-    console.log(`│ Password:   ${ADMIN_CREDENTIALS.password.padEnd(24)} │`);
-    console.log(`│ Role:       ${admin.role.padEnd(24)} │`);
-    console.log('└─────────────────────────────────────────┘\n');
-    console.log('⚠️  IMPORTANT: Change the admin password immediately after first login!\n');
-
+    const admin = await User.create({ name: 'مدیر سیستم', identifier, password, role: 'admin' });
+    console.log('\n✅ ادمین ساخته شد');
+    console.log(`   شناسه: ${admin.identifier}`);
+    if (generated) {
+      console.log(`   رمز (فقط همین یک‌بار نمایش داده می‌شود): ${password}`);
+    }
     process.exit(0);
   } catch (error) {
     console.error('❌ Error creating admin user:', error.message);

@@ -32,6 +32,12 @@ const sendTokenResponse = (user, statusCode, res) => {
 };
 
 const registerUser = async (req, res) => {
+  // ثبت‌نام عمومی بسته است (ادمین با scripts/createAdmin.js ساخته می‌شود).
+  // فقط با ALLOW_REGISTRATION=true (یا در تست) فعال می‌شود.
+  if (process.env.NODE_ENV !== 'test' && process.env.ALLOW_REGISTRATION !== 'true') {
+    return res.status(403).json({ success: false, message: 'ثبت‌نام عمومی غیرفعال است.' });
+  }
+
   try {
     const { name, identifier, password } = req.body;
 

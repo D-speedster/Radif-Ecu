@@ -20,7 +20,7 @@ interface Appointment {
   phone: string;
   carModel: string;
   date: string;
-  time: string;
+  timeSlot: string;
   status: 'Pending' | 'In Progress' | 'Completed';
   trackingCode: string;
 }

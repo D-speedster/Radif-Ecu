@@ -36,17 +36,25 @@ const articleSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    slug: {
+      type: String,
+      trim: true,
+      unique: true,
+      sparse: true,
+    },
+    excerpt: {
+      type: String,
+      trim: true,
+      default: '',
+      maxlength: [300, 'خلاصه نمی‌تواند بیش از ۳۰۰ کاراکتر باشد'],
+    },
     downloads: {
       type: Number,
       default: 0,
       min: 0,
     },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
   },
-  { versionKey: false }
+  { versionKey: false, timestamps: true }
 );
 
 articleSchema.index({ title: 'text', content: 'text' });

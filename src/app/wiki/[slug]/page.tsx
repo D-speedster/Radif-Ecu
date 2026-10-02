@@ -10,7 +10,7 @@ import { toJalali } from '@/lib/utils';
 import { notFound } from 'next/navigation';
 
 // URL API
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+const API_URL = process.env.INTERNAL_API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 // ⭐ دریافت مقاله از API (Server Side)
 async function getArticle(slug: string): Promise<Article | null> {
@@ -21,7 +21,8 @@ async function getArticle(slug: string): Promise<Article | null> {
     });
 
     if (response.ok) {
-      return await response.json();
+      const data = await response.json();
+      return (data.article || data) as Article;
     }
 
     // اگر slug کار نکرد، با _id تلاش می‌کنیم (fallback)

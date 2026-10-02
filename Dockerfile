@@ -20,6 +20,16 @@ COPY --from=deps /app/node_modules ./node_modules
 # Copy the rest of the source
 COPY . .
 
+# متغیرهای زمان build (در bundle مرورگر قرار می‌گیرند)
+ARG NEXT_PUBLIC_API_URL=/api
+ARG NEXT_PUBLIC_SITE_URL=https://radif-ecu.ir
+ARG NEXT_PUBLIC_GTM_ID=
+ARG BACKEND_ORIGIN=http://backend:5000
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL \
+    NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL \
+    NEXT_PUBLIC_GTM_ID=$NEXT_PUBLIC_GTM_ID \
+    BACKEND_ORIGIN=$BACKEND_ORIGIN
+
 # Build the Next.js application
 RUN npm run build
 
@@ -39,6 +49,7 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next  ./.next
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/next.config.js ./next.config.js
 
 USER nextjs
 

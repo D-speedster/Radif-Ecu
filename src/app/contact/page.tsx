@@ -218,16 +218,17 @@ export default function ContactPage() {
             );
           })}
 
-          {/* نقشه (می‌توانید بعدا Google Maps اضافه کنید) */}
           <Card>
-            <h3 className="text-lg font-bold text-[var(--color-text)] mb-4">
-              موقعیت روی نقشه
-            </h3>
-            <div className="bg-[var(--color-bg)] rounded-lg h-48 flex items-center justify-center">
-              <p className="text-[var(--color-muted)]">
-                نقشه به زودی اضافه می‌شود
-              </p>
-            </div>
+            <h3 className="text-lg font-bold text-[var(--color-text)] mb-3">آدرس و مسیریابی</h3>
+            <p className="text-[var(--color-text)] mb-4">{business.address}</p>
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(business.address)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg font-medium bg-[var(--color-btn-primary)] text-[var(--color-btn-text)]"
+            >
+              جستجوی آدرس در Google Maps
+            </a>
           </Card>
         </div>
       </div>

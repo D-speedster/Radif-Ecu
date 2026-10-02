@@ -111,9 +111,9 @@ function EmptyState() {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}
       >
-        <BookMarked style={{ width: '26px', height: '26px', color: '#2563EB' }} />
+        <BookMarked style={{ width: '26px', height: '26px', color: '#B45309' }} />
       </div>
-      <p style={{ fontSize: '15px', fontWeight: 600, color: '#16213E', margin: 0 }}>
+      <p style={{ fontSize: '15px', fontWeight: 600, color: '#0E1621', margin: 0 }}>
         هنوز مقاله‌ای منتشر نشده
       </p>
       <p style={{ fontSize: '13.5px', color: '#64748B', margin: 0, textAlign: 'center', maxWidth: '260px' }}>
@@ -168,7 +168,7 @@ export default function LatestArticlesSection() {
               borderRadius: '20px',
               backgroundColor: 'rgba(37,99,235,0.08)',
               border: '1px solid rgba(37,99,235,0.18)',
-              color: '#2563EB',
+              color: '#B45309',
               fontSize: '12px',
               fontWeight: 600,
               marginBottom: '14px',
@@ -182,7 +182,7 @@ export default function LatestArticlesSection() {
             style={{
               fontSize: 'clamp(1.5rem, 4vw, 2rem)',
               fontWeight: 700,
-              color: '#16213E',
+              color: '#0E1621',
               marginBottom: '0.75rem',
             }}
           >
@@ -226,7 +226,7 @@ export default function LatestArticlesSection() {
                       fontSize: '11.5px',
                       fontWeight: 600,
                       backgroundColor: 'rgba(37,99,235,0.08)',
-                      color: '#2563EB',
+                      color: '#B45309',
                       marginBottom: '12px',
                     }}
                   >
@@ -238,7 +238,7 @@ export default function LatestArticlesSection() {
                     style={{
                       fontSize: '15px',
                       fontWeight: 700,
-                      color: '#16213E',
+                      color: '#0E1621',
                       marginBottom: '10px',
                       lineHeight: '1.5',
                     }}

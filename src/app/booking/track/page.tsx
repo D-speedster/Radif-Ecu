@@ -10,7 +10,7 @@ import Badge from '@/components/ui/Badge';
 import { Search, Calendar, Clock, Car, Wrench, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import api from '@/lib/api';
 import { toJalali } from '@/lib/utils';
-import { telHref } from '@/config/business';
+import { business, telHref } from '@/config/business';
 
 interface Appointment {
   _id: string;
@@ -19,25 +19,23 @@ interface Appointment {
   carModel: string;
   serviceType: string;
   date: string;
-  time: string;
-  description?: string;
+  timeSlot: string;
+  notes?: string;
   trackingCode: string;
-  status: 'pending' | 'in-progress' | 'completed' | 'cancelled';
+  status: 'Pending' | 'In Progress' | 'Completed';
   createdAt: string;
 }
 
 const statusConfig = {
-  pending: { label: 'در انتظار تأیید', color: 'bg-yellow-500', icon: AlertCircle },
-  'in-progress': { label: 'در حال انجام', color: 'bg-blue-500', icon: Loader2 },
-  completed: { label: 'انجام شده', color: 'bg-green-500', icon: CheckCircle },
-  cancelled: { label: 'لغو شده', color: 'bg-red-500', icon: AlertCircle },
+  Pending: { label: 'در انتظار تأیید', color: 'bg-yellow-500', icon: AlertCircle },
+  'In Progress': { label: 'در حال انجام', color: 'bg-blue-500', icon: Loader2 },
+  Completed: { label: 'انجام شده', color: 'bg-green-500', icon: CheckCircle },
 };
 
 const serviceTypeLabels: Record<string, string> = {
   hardware: 'تعمیرات سخت‌افزار ECU',
   remap: 'ریمپ و تیونینگ',
-  multiplex: 'مالتی‌پلکس و دیاگ',
-  dump: 'خواندن و نوشتن فایل دامپ',
+  network: 'مالتی‌پلکس، دیاگ و عیب‌یابی',
 };
 
 function TrackAppointmentContent() {
@@ -70,7 +68,7 @@ function TrackAppointmentContent() {
 
     try {
       const response = await api.get(`/appointments/track/${searchCode}`);
-      setAppointment(response.data);
+      setAppointment(response.data.appointment || response.data);
     } catch (err: any) {
       setError(err.response?.data?.message || 'نوبتی با این کد پیگیری یافت نشد');
     } finally {
@@ -85,7 +83,7 @@ function TrackAppointmentContent() {
       <div className="container mx-auto px-4">
         {/* هدر */}
         <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold text-[var(--color-text)] mb-4">
             پیگیری نوبت
           </h1>
           <p className="text-gray-400 text-lg">
@@ -148,7 +146,7 @@ function TrackAppointmentContent() {
                     {statusConfig[appointment.status].label}
                   </span>
                 </div>
-                <p className="text-gray-400">کد پیگیری: <span className="text-white font-mono">{appointment.trackingCode}</span></p>
+                <p className="text-gray-400">کد پیگیری: <span className="text-[var(--color-text)] font-mono">{appointment.trackingCode}</span></p>
               </div>
 
               {/* جزئیات */}
@@ -158,7 +156,7 @@ function TrackAppointmentContent() {
                     <Car className="w-5 h-5" />
                     <span className="text-sm">اطلاعات خودرو</span>
                   </div>
-                  <p className="text-white font-medium">{appointment.carModel}</p>
+                  <p className="text-[var(--color-text)] font-medium">{appointment.carModel}</p>
                 </div>
 
                 <div className="bg-[var(--color-bg)] rounded-lg p-4">
@@ -166,7 +164,7 @@ function TrackAppointmentContent() {
                     <Wrench className="w-5 h-5" />
                     <span className="text-sm">نوع خدمت</span>
                   </div>
-                  <p className="text-white font-medium">
+                  <p className="text-[var(--color-text)] font-medium">
                     {serviceTypeLabels[appointment.serviceType] || appointment.serviceType}
                   </p>
                 </div>
@@ -176,7 +174,7 @@ function TrackAppointmentContent() {
                     <Calendar className="w-5 h-5" />
                     <span className="text-sm">تاریخ</span>
                   </div>
-                  <p className="text-white font-medium">{toJalali(appointment.date)}</p>
+                  <p className="text-[var(--color-text)] font-medium">{toJalali(appointment.date)}</p>
                 </div>
 
                 <div className="bg-[var(--color-bg)] rounded-lg p-4">
@@ -184,15 +182,15 @@ function TrackAppointmentContent() {
                     <Clock className="w-5 h-5" />
                     <span className="text-sm">ساعت</span>
                   </div>
-                  <p className="text-white font-medium">{appointment.time}</p>
+                  <p className="text-[var(--color-text)] font-medium">{appointment.timeSlot}</p>
                 </div>
               </div>
 
               {/* توضیحات */}
-              {appointment.description && (
+              {appointment.notes && (
                 <div className="mt-6 bg-[var(--color-bg)] rounded-lg p-4">
                   <p className="text-gray-400 text-sm mb-2">توضیحات:</p>
-                  <p className="text-white">{appointment.description}</p>
+                  <p className="text-[var(--color-text)]">{appointment.notes}</p>
                 </div>
               )}
 
@@ -204,7 +202,7 @@ function TrackAppointmentContent() {
                 <div className="text-center">
                   <a href={telHref}>
                     <Button variant="secondary" size="lg">
-                      ۰۲۱-۱۲۳۴۵۶۷۸
+                      {business.phoneDisplay}
                     </Button>
                   </a>
                 </div>

@@ -12,8 +12,8 @@ interface Appointment {
   phone: string;
   carModel: string;
   date: string;
-  time: string;
-  status: 'pending' | 'in-progress' | 'completed' | 'cancelled';
+  timeSlot: string;
+  status: 'Pending' | 'In Progress' | 'Completed';
   trackingCode: string;
 }
 
@@ -22,10 +22,9 @@ interface RecentAppointmentsProps {
 }
 
 const statusConfig = {
-  pending: { label: 'در انتظار', color: 'yellow' as const },
-  'in-progress': { label: 'در حال انجام', color: 'blue' as const },
-  completed: { label: 'انجام شده', color: 'green' as const },
-  cancelled: { label: 'لغو شده', color: 'red' as const },
+  Pending: { label: 'در انتظار', color: 'yellow' as const },
+  'In Progress': { label: 'در حال انجام', color: 'blue' as const },
+  Completed: { label: 'انجام شده', color: 'green' as const },
 };
 
 export default function RecentAppointments({ appointments }: RecentAppointmentsProps) {
@@ -82,7 +81,7 @@ export default function RecentAppointments({ appointments }: RecentAppointmentsP
                 </span>
                 <span className="flex items-center gap-1">
                   <Clock className="w-3 h-3" />
-                  {appointment.time}
+                  {appointment.timeSlot}
                 </span>
               </div>
             </div>
