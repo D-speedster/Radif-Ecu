@@ -22,10 +22,11 @@ interface Appointment {
   name: string;
   phone: string;
   carModel: string;
+  ecuModel?: string;
   serviceType: string;
   date: string;
   timeSlot: string;
-  description?: string;
+  notes?: string;
   trackingCode: string;
   status: 'Pending' | 'In Progress' | 'Completed';
   createdAt: string;
@@ -39,9 +40,8 @@ const statusConfig = {
 
 const serviceTypeLabels: Record<string, string> = {
   hardware: 'تعمیرات سخت‌افزار',
-  remap: 'ریمپ و تیونینگ',
-  multiplex: 'مالتی‌پلکس و دیاگ',
-  dump: 'خواندن/نوشتن دامپ',
+  remap: 'ریمپ تخصصی',
+  network: 'مالتی‌پلکس، دیاگ و عیب‌یابی',
 };
 
 type StatusFilter = 'all' | 'Pending' | 'In Progress' | 'Completed';
@@ -237,6 +237,12 @@ export default function AppointmentsPage() {
                       <Car className="w-4 h-4" style={{ color: '#7D7D7D' }} />
                       <span>{appointment.carModel}</span>
                     </div>
+                    {appointment.ecuModel && (
+                      <div className="flex items-center gap-2 text-sm" style={{ color: '#252525' }}>
+                        <span style={{ color: '#7D7D7D' }}>ECU:</span>
+                        <span>{appointment.ecuModel}</span>
+                      </div>
+                    )}
                     <div className="flex items-center gap-2 text-sm" style={{ color: '#252525' }}>
                       <span style={{ color: '#7D7D7D' }}>خدمت:</span>
                       <span>
@@ -255,11 +261,11 @@ export default function AppointmentsPage() {
                   </div>
 
                   {/* توضیحات */}
-                  {appointment.description && (
+                  {appointment.notes && (
                     <div className="rounded-lg p-3" style={{ backgroundColor: '#F5F5F5' }}>
                       <p className="text-xs mb-1" style={{ color: '#7D7D7D' }}>توضیحات:</p>
                       <p className="text-sm" style={{ color: '#252525' }}>
-                        {appointment.description}
+                        {appointment.notes}
                       </p>
                     </div>
                   )}

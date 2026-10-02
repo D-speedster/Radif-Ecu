@@ -54,7 +54,7 @@ export default function AdminWikiPage() {
     setError('');
 
     try {
-      const response = await api.get('/articles');
+      const response = await api.get('/articles/admin/all');
       const data = Array.isArray(response.data)
         ? response.data
         : (response.data.articles || []);
@@ -77,7 +77,7 @@ export default function AdminWikiPage() {
     try {
       await api.patch(`/articles/${id}`, { published: !currentStatus });
       setArticles((prev) =>
-        prev.map((a) => (a._id === id ? { ...a, isPublished: !currentStatus } : a))
+        prev.map((a) => (a._id === id ? { ...a, published: !currentStatus } : a))
       );
     } catch (err: any) {
       console.error('خطا در تغییر وضعیت:', err);

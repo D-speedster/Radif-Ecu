@@ -13,6 +13,18 @@ const publicFormLimiter = isTest
       message: { success: false, message: 'تعداد درخواست‌های شما زیاد است. لطفاً کمی بعد دوباره تلاش کنید.' },
     });
 
+// حداکثر ۵ تلاش لاگین در ۱۵ دقیقه برای هر IP
+const loginLimiter = isTest
+  ? (req, res, next) => next()
+  : rateLimit({
+      windowMs: 15 * 60 * 1000, // 15 دقیقه
+      max: 5,
+      standardHeaders: true,
+      legacyHeaders: false,
+      message: { success: false, message: 'تعداد تلاش‌های ورود زیاد است. لطفاً ۱۵ دقیقه دیگر دوباره تلاش کنید.' },
+      skipSuccessfulRequests: true, // فقط تلاش‌های ناموفق را حساب کن
+    });
+
 // Honeypot: فیلد مخفی «website» که انسان پر نمی‌کند ولی ربات‌ها پر می‌کنند.
 // پاسخ موفقیت‌نما می‌دهیم تا ربات متوجه نشود، ولی چیزی ذخیره نمی‌شود.
 const honeypot = (req, res, next) => {
@@ -22,4 +34,4 @@ const honeypot = (req, res, next) => {
   next();
 };
 
-module.exports = { publicFormLimiter, honeypot };
+module.exports = { publicFormLimiter, loginLimiter, honeypot };

@@ -46,10 +46,36 @@ export default function NewArticlePage() {
   const handleSubmit = async (publish: boolean) => {
     setError('');
 
-    if (!formData.title.trim()) { setError('عنوان مقاله الزامی است'); return; }
-    if (!formData.slug.trim())  { setError('Slug الزامی است'); return; }
+    // Validation
+    if (!formData.title.trim()) { 
+      setError('عنوان مقاله الزامی است'); 
+      return; 
+    }
+    
+    if (!formData.slug.trim()) { 
+      setError('Slug الزامی است'); 
+      return; 
+    }
+    
+    // بررسی فرمت slug
+    const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+    if (!slugPattern.test(formData.slug)) {
+      setError('Slug فقط می‌تواند شامل حروف کوچک انگلیسی، اعداد و خط تیره باشد');
+      return;
+    }
+    
     if (!formData.content.trim() || formData.content === '<p></p>') {
-      setError('محتوای مقاله الزامی است'); return;
+      setError('محتوای مقاله الزامی است'); 
+      return;
+    }
+
+    // بررسی فرمت downloadUrl
+    if (formData.downloadUrl && formData.downloadUrl.trim()) {
+      const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+      if (!urlPattern.test(formData.downloadUrl.trim())) {
+        setError('فرمت لینک دانلود نامعتبر است. مثال: https://example.com/file.zip');
+        return;
+      }
     }
 
     setLoading(true);
@@ -238,7 +264,11 @@ export default function NewArticlePage() {
             </Button>
             <Button
               type="button"
-              onClick={() => handleSubmit(true)}
+              onClick={() => {
+                if (confirm('آیا از انتشار این مقاله اطمینان دارید؟ مقاله برای همه کاربران قابل مشاهده خواهد بود.')) {
+                  handleSubmit(true);
+                }
+              }}
               variant="accent"
               size="lg"
               disabled={loading}

@@ -5,6 +5,7 @@ const {
   getAppointments,
   updateAppointmentStatus,
   getAppointmentByTracking,
+  deleteAppointment,
 } = require('../controllers/appointmentController');
 const { protect, admin } = require('../middleware/authMiddleware');
 const { publicFormLimiter, honeypot } = require('../middleware/antiSpam');
@@ -17,5 +18,6 @@ router.get('/track/:code', getAppointmentByTracking);
 // Admin only
 router.get('/', protect, admin, getAppointments);
 router.patch('/:id/status', protect, admin, updateAppointmentStatus);
+router.delete('/:id', protect, admin, deleteAppointment);
 
 module.exports = router;

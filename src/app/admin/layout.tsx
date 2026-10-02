@@ -53,10 +53,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
       {/* Sidebar Desktop */}
-      <aside className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
-        <div className="flex flex-col flex-grow border-l" style={{ backgroundColor: '#FFFFFF', borderColor: '#E0E0E0' }}>
+      <aside className="hidden lg:fixed lg:inset-y-0 lg:right-0 lg:flex lg:w-64 lg:flex-col">
+        <div className="flex h-screen flex-col border-l" style={{ backgroundColor: '#FFFFFF', borderColor: '#E0E0E0' }}>
           {/* Header */}
-          <div className="flex items-center gap-3 p-6 border-b" style={{ borderColor: '#E0E0E0' }}>
+          <div className="flex items-center gap-3 p-6 border-b flex-shrink-0" style={{ borderColor: '#E0E0E0' }}>
             <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#EBF5FF' }}>
               <LayoutDashboard className="w-6 h-6" style={{ color: '#3B82F6' }} />
             </div>
@@ -67,7 +67,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 p-4 space-y-2">
+          <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
@@ -100,15 +100,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </nav>
 
           {/* User Info + Logout */}
-          <div className="p-4 border-t" style={{ borderColor: '#E0E0E0' }}>
+          <div className="p-4 border-t flex-shrink-0" style={{ borderColor: '#E0E0E0' }}>
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#EBF5FF' }}>
                 <span className="font-bold" style={{ color: '#3B82F6' }}>
                   {user.identifier?.[0]?.toUpperCase()}
                 </span>
               </div>
-              <div className="flex-1">
-                <p className="text-sm font-medium" style={{ color: '#252525' }}>{user.identifier}</p>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium truncate" style={{ color: '#252525' }}>{user.identifier}</p>
                 <p className="text-xs" style={{ color: '#7D7D7D' }}>مدیر سیستم</p>
               </div>
             </div>
@@ -149,9 +149,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             style={{ backgroundColor: '#FFFFFF', borderColor: '#E0E0E0' }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex flex-col h-full">
+            <div className="flex h-screen flex-col">
               {/* Header */}
-              <div className="flex items-center justify-between p-4 border-b" style={{ borderColor: '#E0E0E0' }}>
+              <div className="flex items-center justify-between p-4 border-b flex-shrink-0" style={{ borderColor: '#E0E0E0' }}>
                 <h1 className="font-bold" style={{ color: '#252525' }}>پنل مدیریت</h1>
                 <button
                   onClick={() => setSidebarOpen(false)}
@@ -163,7 +163,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </div>
 
               {/* Navigation */}
-              <nav className="flex-1 p-4 space-y-2">
+              <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
                 {navItems.map((item) => {
                   const Icon = item.icon;
                   const isActive = pathname === item.href;
@@ -189,15 +189,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </nav>
 
               {/* User + Logout */}
-              <div className="p-4 border-t" style={{ borderColor: '#E0E0E0' }}>
+              <div className="p-4 border-t flex-shrink-0" style={{ borderColor: '#E0E0E0' }}>
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#EBF5FF' }}>
                     <span className="font-bold" style={{ color: '#3B82F6' }}>
                       {user.identifier?.[0]?.toUpperCase()}
                     </span>
                   </div>
-                  <div>
-                    <p className="text-sm font-medium" style={{ color: '#252525' }}>{user.identifier}</p>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate" style={{ color: '#252525' }}>{user.identifier}</p>
                     <p className="text-xs" style={{ color: '#7D7D7D' }}>مدیر سیستم</p>
                   </div>
                 </div>
@@ -216,7 +216,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       )}
 
       {/* Main Content */}
-      <main className="lg:pr-64 min-h-screen">
+      <main className="lg:pl-64 min-h-screen">
         <div className="pt-16 lg:pt-0 p-4 lg:p-8">{children}</div>
       </main>
     </div>

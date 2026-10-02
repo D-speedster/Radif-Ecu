@@ -5,7 +5,7 @@ export const business = {
   phone: '09966500516',               // فرمت محلی برای tel:
   phoneDisplay: '۰۹۹۶-۶۵۰-۰۵۱۶',
   whatsapp: '989966500516',           // بدون + و صفر اول؛ برای wa.me
-  email: 'info@radif-ecu.ir',         // ⚠️ اگر ایمیل واقعی دیگری دارید، اینجا عوض کنید
+  email: 'info@radif-ecu.ir',
   city: 'تهران',
   address: 'تهران، جنت‌آباد شمالی، گلزار شرقی، پلاک ۲۴',
   street: 'جنت‌آباد شمالی، گلزار شرقی، پلاک ۲۴',

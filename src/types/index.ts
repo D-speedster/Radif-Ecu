@@ -6,7 +6,7 @@ export interface Article {
   category: string;
   content: string;
   excerpt?: string;
-  downloadLink?: string;
+  downloadUrl?: string;
   isPrivate: boolean;
   isPublished: boolean;
   createdAt: string;

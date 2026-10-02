@@ -191,10 +191,10 @@ export default async function ArticlePage({
                 />
 
                 {/* دانلود فایل */}
-                {article.downloadLink && (
+                {article.downloadUrl && (
                   <div className="mt-8 pt-6 border-t border-[var(--color-border)]">
                     <a
-                      href={article.downloadLink}
+                      href={article.downloadUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                     >

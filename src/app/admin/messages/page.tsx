@@ -20,20 +20,20 @@ import api from '@/lib/api';
 interface Message {
   _id: string;
   name: string;
-  email: string;
   phone: string;
+  subject: string;
   message: string;
-  status: 'new' | 'read' | 'replied';
+  status: 'New' | 'Read' | 'Replied';
   createdAt: string;
 }
 
 const statusConfig = {
-  new: { label: 'جدید', color: 'yellow' as const },
-  read: { label: 'خوانده شده', color: 'blue' as const },
-  replied: { label: 'پاسخ داده شده', color: 'green' as const },
+  New: { label: 'جدید', color: 'yellow' as const },
+  Read: { label: 'خوانده شده', color: 'blue' as const },
+  Replied: { label: 'پاسخ داده شده', color: 'green' as const },
 };
 
-type StatusFilter = 'all' | 'new' | 'read' | 'replied';
+type StatusFilter = 'all' | 'New' | 'Read' | 'Replied';
 
 export default function MessagesPage() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -60,7 +60,7 @@ export default function MessagesPage() {
     setError('');
 
     try {
-      const response = await api.get('/messages');
+      const response = await api.get('/contact');
       const data = Array.isArray(response.data)
         ? response.data
         : (response.data.messages || []);
@@ -83,7 +83,7 @@ export default function MessagesPage() {
     setUpdatingId(id);
 
     try {
-      await api.patch(`/messages/${id}/status`, { status: newStatus });
+      await api.patch(`/contact/${id}/status`, { status: newStatus });
 
       setMessages((prev) =>
         prev.map((m) => (m._id === id ? { ...m, status: newStatus } : m))
@@ -102,7 +102,7 @@ export default function MessagesPage() {
     }
 
     try {
-      await api.delete(`/messages/${id}`);
+      await api.delete(`/contact/${id}`);
       setMessages((prev) => prev.filter((m) => m._id !== id));
     } catch (err: any) {
       console.error('خطا در حذف پیام:', err);
@@ -207,11 +207,12 @@ export default function MessagesPage() {
                           {statusConfig[message.status].label}
                         </Badge>
                       </div>
+                      {message.subject && (
+                        <div className="mb-2 text-sm font-medium" style={{ color: '#7D7D7D' }}>
+                          موضوع: {message.subject}
+                        </div>
+                      )}
                       <div className="flex flex-col sm:flex-row gap-4 text-sm" style={{ color: '#545454' }}>
-                        <span className="flex items-center gap-2">
-                          <Mail className="w-3 h-3" />
-                          {message.email}
-                        </span>
                         <span className="flex items-center gap-2">
                           <Phone className="w-3 h-3" />
                           {message.phone}
@@ -250,13 +251,13 @@ export default function MessagesPage() {
                       color: '#252525'
                     }}
                   >
-                    <option value="new">جدید</option>
-                    <option value="read">خوانده شده</option>
-                    <option value="replied">پاسخ داده شده</option>
+                    <option value="New">جدید</option>
+                    <option value="Read">خوانده شده</option>
+                    <option value="Replied">پاسخ داده شده</option>
                   </select>
 
                   <a
-                    href={`mailto:${message.email}`}
+                    href={`tel:${message.phone}`}
                     className="px-4 py-2 border rounded-lg transition-all text-sm font-medium text-center"
                     style={{
                       backgroundColor: '#EBF5FF',
@@ -264,7 +265,7 @@ export default function MessagesPage() {
                       borderColor: '#BFDBFE'
                     }}
                   >
-                    پاسخ ایمیل
+                    تماس تلفنی
                   </a>
 
                   <button

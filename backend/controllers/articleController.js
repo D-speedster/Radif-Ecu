@@ -65,7 +65,12 @@ const getArticles = async (req, res) => {
       ? articles.map((a) => a.toObject())
       : articles.map((a) => sanitiseForGuest(a));
 
-    res.status(200).json({ success: true, count: data.length, authenticated: isAuthenticated, articles: data });
+    res.status(200).json({ 
+      success: true, 
+      count: data.length, 
+      authenticated: isAuthenticated, 
+      articles: data 
+    });
   } catch (error) {
     console.error('getArticles Error:', error.message);
     res.status(500).json({ success: false, message: 'خطای سرور. لطفاً دوباره تلاش کنید.' });
@@ -120,13 +125,32 @@ const createArticle = async (req, res) => {
       return res.status(400).json({ success: false, message: 'دسته‌بندی نامعتبر است. مقادیر مجاز: ecu، multiplex، dtc، dump' });
     }
 
+    // Validation برای downloadUrl
+    let validatedDownloadUrl = null;
+    if (downloadUrl && downloadUrl.trim()) {
+      const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+      if (!urlPattern.test(downloadUrl.trim())) {
+        return res.status(400).json({ success: false, message: 'فرمت لینک دانلود نامعتبر است' });
+      }
+      validatedDownloadUrl = downloadUrl.trim();
+    }
+
+    const cleanedContent = cleanHtml((content || '').trim());
+    
+    // Auto-generate excerpt اگر خالی باشد
+    let finalExcerpt = (excerpt || '').trim();
+    if (!finalExcerpt && cleanedContent) {
+      const plainText = toPlainText(cleanedContent);
+      finalExcerpt = plainText.substring(0, 300);
+    }
+
     const article = await Article.create({
       title:       title.trim(),
       slug:        await uniqueSlug(Article, slug || title),
-      excerpt:     (excerpt || '').trim(),
-      content:     cleanHtml((content || '').trim()),
+      excerpt:     finalExcerpt,
+      content:     cleanedContent,
       category,
-      downloadUrl: downloadUrl ? downloadUrl.trim() : null,
+      downloadUrl: validatedDownloadUrl,
       isPrivate:   isPrivate  !== undefined ? Boolean(isPrivate)  : true,
       published:   published  !== undefined ? Boolean(published)  : false,
     });
@@ -145,6 +169,19 @@ const updateArticle = async (req, res) => {
     allowed.forEach((f) => { if (req.body[f] !== undefined) updates[f] = req.body[f]; });
 
     if (updates.content) updates.content = cleanHtml(updates.content);
+
+    // Validation برای downloadUrl
+    if (updates.downloadUrl !== undefined) {
+      if (updates.downloadUrl && updates.downloadUrl.trim()) {
+        const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+        if (!urlPattern.test(updates.downloadUrl.trim())) {
+          return res.status(400).json({ success: false, message: 'فرمت لینک دانلود نامعتبر است' });
+        }
+        updates.downloadUrl = updates.downloadUrl.trim();
+      } else {
+        updates.downloadUrl = null;
+      }
+    }
 
     if (req.body.slug) updates.slug = await uniqueSlug(Article, req.body.slug, req.params.id);
 

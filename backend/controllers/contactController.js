@@ -118,8 +118,30 @@ const updateMessageStatus = async (req, res) => {
   }
 };
 
+const deleteContactMessage = async (req, res) => {
+  try {
+    const message = await ContactMessage.findByIdAndDelete(req.params.id);
+
+    if (!message) {
+      return res.status(404).json({ success: false, message: 'پیام مورد نظر یافت نشد' });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'پیام با موفقیت حذف شد',
+    });
+  } catch (error) {
+    if (error.name === 'CastError') {
+      return res.status(400).json({ success: false, message: 'شناسه پیام نامعتبر است' });
+    }
+    console.error('deleteContactMessage Error:', error.message);
+    res.status(500).json({ success: false, message: 'خطای سرور. لطفاً دوباره تلاش کنید.' });
+  }
+};
+
 module.exports = {
   createContactMessage,
   getContactMessages,
   updateMessageStatus,
+  deleteContactMessage,
 };
