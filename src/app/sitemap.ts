@@ -32,6 +32,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
+      url: `${SITE_URL}/booking`,
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
       url: `${SITE_URL}/contact`,
       changeFrequency: 'monthly',
       priority: 0.7,
@@ -41,7 +46,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // دریافت مقالات از API
   try {
     const response = await fetch(`${API_URL}/articles`, {
-      next: { revalidate: 3600 }, // revalidate هر ساعت
+      next: { revalidate: 86400 }, // revalidate هر 24 ساعت
     });
 
     if (!response.ok) {

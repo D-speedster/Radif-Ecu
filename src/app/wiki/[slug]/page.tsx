@@ -102,9 +102,12 @@ export default async function ArticlePage({
   // ⭐ Schema Markup برای گوگل (JSON-LD)
   const articleSchema = {
     '@context': 'https://schema.org',
-    '@type': 'Article',
+    '@type': 'TechArticle',
     headline: article.title,
     description: article.excerpt || article.content.replace(/<[^>]*>/g, '').substring(0, 160),
+    articleSection: article.category,
+    wordCount: Math.round(article.content.replace(/<[^>]*>/g, '').split(/\s+/).filter((w: string) => w.length > 0).length),
+    inLanguage: 'fa',
     author: {
       '@type': 'Organization',
       name: 'ردیف ایسیو',
@@ -113,6 +116,7 @@ export default async function ArticlePage({
     publisher: {
       '@type': 'Organization',
       name: 'ردیف ایسیو',
+      url: 'https://radif-ecu.ir',
       logo: {
         '@type': 'ImageObject',
         url: 'https://radif-ecu.ir/logo.png',
@@ -126,12 +130,41 @@ export default async function ArticlePage({
     },
   };
 
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'خانه',
+        item: 'https://radif-ecu.ir',
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'دانشنامه',
+        item: 'https://radif-ecu.ir/wiki',
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: article.title,
+        item: `https://radif-ecu.ir/wiki/${article.slug || article._id}`,
+      },
+    ],
+  };
+
   return (
     <>
       {/* Schema Markup */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
       <div className="min-h-screen bg-[var(--color-bg)]">

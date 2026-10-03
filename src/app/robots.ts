@@ -9,8 +9,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        // /auth و /booking/success|track اینجا نیامده‌اند تا گوگل تگ noindex را ببیند
-        disallow: ['/admin/', '/api/'],
+        disallow: ['/admin/', '/api/', '/booking/success', '/booking/track'],
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
