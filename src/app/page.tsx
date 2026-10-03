@@ -44,7 +44,7 @@ export default function HomePage() {
     name: business.name,
     description: 'تعمیر، ریمپ و برنامه‌نویسی تخصصی ایسیوهای خودرو',
     url: business.url,
-    telephone: `+98${business.phone.replace(/-/g, '')}`,
+    telephone: `+98${business.phone.slice(1).replace(/-/g, '')}`,
     address: {
       '@type': 'PostalAddress',
       streetAddress: business.street,

@@ -20,7 +20,7 @@ export default async function RemapPage() {
       '@type': 'AutoRepair',
       name: business.name,
       url: business.url,
-      telephone: `+98${business.phone.slice(1)}`,
+      telephone: `+98${business.phone.slice(1).replace(/-/g, '')}`,
       address: {
         '@type': 'PostalAddress',
         streetAddress: business.street,
