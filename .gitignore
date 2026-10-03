@@ -45,3 +45,39 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# agent artifacts (task plans, reviews, build logs)
+/.agents/tasks/*.txt
+/.agents/tasks/*-review.md
+/.agents/tasks/*-plan.md
+/.agents/tasks/*.json
+!/.agents/tasks/seo-plan.md
+# keep main SEO plan tracked
+
+# IDE
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+
+# OS (additional)
+Thumbs.db
+Desktop.ini
+
+# Logs
+logs/
+*.log.*
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+.worktrees/
+
+# Build artifacts
+build-verify.txt
