@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import StatCard from '@/components/admin/StatCard';
 import RecentAppointments from '@/components/admin/RecentAppointments';
-import { Calendar, Clock, BookOpen, Mail, Loader2, AlertCircle } from 'lucide-react';
+import { Calendar, Clock, BookOpen, Mail, Loader2, AlertCircle, Globe } from 'lucide-react';
 import api from '@/lib/api';
 
 interface DashboardStats {
@@ -12,6 +12,7 @@ interface DashboardStats {
   pendingAppointments: number;
   totalArticles: number;
   newMessages: number;
+  landingPages: number;
 }
 
 interface Appointment {
@@ -32,6 +33,7 @@ export default function AdminDashboard() {
     pendingAppointments: 0,
     totalArticles: 0,
     newMessages: 0,
+    landingPages: 0,
   });
   const [recentAppointments, setRecentAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
@@ -76,11 +78,24 @@ export default function AdminDashboard() {
         // اگر API نباشد، 0 نشان بده
       }
 
+      // Fetch landing pages count
+      let landingPagesCount = 0;
+      try {
+        const landingPagesRes = await api.get('/landing-pages');
+        const landingPages = Array.isArray(landingPagesRes.data)
+          ? landingPagesRes.data
+          : (landingPagesRes.data.landingPages || []);
+        landingPagesCount = landingPages.length;
+      } catch {
+        // اگر API نباشد، 0 نشان بده
+      }
+
       setStats({
         todayAppointments: todayCount,
         pendingAppointments: pendingCount,
         totalArticles: articlesCount,
         newMessages: messagesCount,
+        landingPages: landingPagesCount,
       });
 
       // آخرین 5 نوبت
@@ -160,7 +175,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <a
           href="/admin/appointments"
           className="p-6 border rounded-xl transition-all group"
@@ -183,6 +198,18 @@ export default function AdminDashboard() {
           <BookOpen className="w-8 h-8 mb-3 group-hover:scale-110 transition-transform" style={{ color: '#A855F7' }} />
           <h3 className="text-lg font-bold mb-1" style={{ color: '#252525' }}>مدیریت دانشنامه</h3>
           <p className="text-sm" style={{ color: '#545454' }}>افزودن و ویرایش مقالات</p>
+        </a>
+
+        <a
+          href="/admin/landing-pages"
+          className="p-6 border rounded-xl transition-all group"
+          style={{ backgroundColor: '#FFFFFF', borderColor: '#E0E0E0' }}
+          onMouseEnter={(e) => e.currentTarget.style.borderColor = '#252525'}
+          onMouseLeave={(e) => e.currentTarget.style.borderColor = '#E0E0E0'}
+        >
+          <Globe className="w-8 h-8 mb-3 group-hover:scale-110 transition-transform" style={{ color: '#F59E0B' }} />
+          <h3 className="text-lg font-bold mb-1" style={{ color: '#252525' }}>مدیریت لندینگ پیج‌ها</h3>
+          <p className="text-sm" style={{ color: '#545454' }}>ساخت و ویرایش صفحات لندینگ</p>
         </a>
 
         <a

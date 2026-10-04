@@ -9,6 +9,7 @@ import {
   Calendar,
   Mail,
   BookOpen,
+  Globe,
   LogOut,
   Loader2,
   Menu,
@@ -21,6 +22,7 @@ const navItems = [
   { href: '/admin/appointments', label: 'نوبت‌ها', icon: Calendar },
   { href: '/admin/messages', label: 'پیام‌ها', icon: Mail },
   { href: '/admin/wiki', label: 'دانشنامه', icon: BookOpen },
+  { href: '/admin/landing-pages', label: 'لندینگ پیج‌ها', icon: Globe },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
