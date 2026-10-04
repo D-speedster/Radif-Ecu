@@ -1,0 +1,18 @@
+# Modern browsers that support ES6+ features natively
+# This eliminates unnecessary polyfills and reduces bundle size
+
+[production]
+# Target browsers with native ES6 module support
+# Covers ~95% of global users (2024)
+defaults and supports es6-module
+last 2 Chrome versions
+last 2 Firefox versions
+last 2 Safari versions
+last 2 Edge versions
+not IE 11
+not dead
+
+[development]
+last 1 chrome version
+last 1 firefox version
+last 1 safari version

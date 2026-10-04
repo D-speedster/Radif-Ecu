@@ -15,13 +15,40 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60,
   },
-  // Optimize CSS loading
+  // Target modern browsers - no legacy polyfills
+  swcMinify: true,
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
   experimental: {
     optimizeCss: true, // Enable CSS optimization
-    optimizePackageImports: ['lucide-react'], // Optimize icon imports
+    optimizePackageImports: ['lucide-react', '@tiptap/react', '@tiptap/starter-kit'], // Optimize imports
+  },
+  // Modular imports to reduce bundle size
+  modularizeImports: {
+    'lucide-react': {
+      transform: 'lucide-react/dist/esm/icons/{{member}}',
+    },
+  },
+  // Webpack configuration for modern JavaScript
+  webpack: (config, { isServer, webpack }) => {
+    if (!isServer) {
+      // Replace node modules with empty modules for client-side
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      };
+      
+      // Exclude polyfills for modern browsers
+      config.plugins.push(
+        new webpack.DefinePlugin({
+          'process.env.BROWSERSLIST_ENV': JSON.stringify('modern'),
+        })
+      );
+    }
+    return config;
   },
   async rewrites() {
     return [{ source: '/api/:path*', destination: `${BACKEND_ORIGIN}/api/:path*` }];
@@ -56,6 +83,15 @@ const nextConfig = {
           {
             key: 'Link',
             value: '</_next/static/css/:path*>; rel=preload; as=style',
+          },
+        ],
+      },
+      {
+        source: '/_next/static/chunks/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },
