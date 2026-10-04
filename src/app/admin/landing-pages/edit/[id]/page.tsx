@@ -18,9 +18,11 @@ interface LandingPage {
   title: string;
   slug: string;
   category: string;
-  metaTitle?: string;
-  metaDescription?: string;
-  keywords?: string[];
+  metadata?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    keywords?: string[];
+  };
   sections: Array<{
     type: string;
     data: any;
@@ -74,27 +76,23 @@ export default function EditLandingPagePage() {
     setError('');
 
     try {
-      // Fetch all landing pages and find by ID
-      const response = await api.get('/landing-pages');
-      const data = Array.isArray(response.data)
-        ? response.data
-        : (response.data.landingPages || []);
-      
-      const landingPage = data.find((lp: LandingPage) => lp._id === id);
+      // Fetch landing page by ID using new endpoint
+      const response = await api.get(`/landing-pages/by-id/${id}`);
+      const landingPage = response.data.landingPage;
 
       if (!landingPage) {
         setError('لندینگ پیج یافت نشد');
         return;
       }
 
-      // Set form data
+      // Set form data, reading metadata from nested structure
       setFormData({
         title: landingPage.title,
         slug: landingPage.slug,
         category: landingPage.category || '',
-        metaTitle: landingPage.metaTitle || '',
-        metaDescription: landingPage.metaDescription || '',
-        keywords: landingPage.keywords?.join(', ') || '',
+        metaTitle: landingPage.metadata?.metaTitle || '',
+        metaDescription: landingPage.metadata?.metaDescription || '',
+        keywords: landingPage.metadata?.keywords?.join(', ') || '',
         published: landingPage.published,
         schema: landingPage.schema ? JSON.stringify(landingPage.schema, null, 2) : '',
       });

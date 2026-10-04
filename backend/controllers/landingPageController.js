@@ -53,13 +53,50 @@ const getLandingPageBySlug = async (req, res) => {
   }
 };
 
+// GET one by ID — admin only, for editing
+const getLandingPageById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const landingPage = await LandingPage.findById(id);
+
+    if (!landingPage) {
+      return res.status(404).json({ success: false, message: 'صفحه مورد نظر یافت نشد' });
+    }
+
+    res.status(200).json({
+      success: true,
+      landingPage: landingPage.toObject(),
+    });
+  } catch (error) {
+    if (error.name === 'CastError') {
+      return res.status(400).json({ success: false, message: 'شناسه صفحه نامعتبر است' });
+    }
+    console.error('getLandingPageById Error:', error.message);
+    res.status(500).json({ success: false, message: 'خطای سرور. لطفاً دوباره تلاش کنید.' });
+  }
+};
+
 // POST create new — admin only
 const createLandingPage = async (req, res) => {
   try {
-    const { title, slug, category, sections, metadata, schema, published } = req.body;
+    const { title, slug, category, sections, metaTitle, metaDescription, keywords, metadata, schema, published } = req.body;
 
     if (!title) {
       return res.status(400).json({ success: false, message: 'عنوان الزامی است' });
+    }
+
+    // Construct metadata from flat fields or nested object
+    let metadataObj;
+    if (metadata && typeof metadata === 'object') {
+      // Frontend sent nested metadata object
+      metadataObj = metadata;
+    } else {
+      // Frontend sent flat fields
+      metadataObj = {
+        metaTitle: metaTitle || '',
+        metaDescription: metaDescription || '',
+        keywords: Array.isArray(keywords) ? keywords : [],
+      };
     }
 
     const landingPage = await LandingPage.create({
@@ -67,7 +104,7 @@ const createLandingPage = async (req, res) => {
       slug: await uniqueSlug(LandingPage, slug || title),
       category: category ? category.trim() : '',
       sections: sections || [],
-      metadata: metadata || { metaTitle: '', metaDescription: '', keywords: [] },
+      metadata: metadataObj,
       schema: schema || null,
       published: published !== undefined ? Boolean(published) : true,
     });
@@ -91,9 +128,27 @@ const updateLandingPage = async (req, res) => {
   try {
     const allowed = ['title', 'slug', 'category', 'sections', 'metadata', 'schema', 'published'];
     const updates = {};
+    
+    // Handle metadata construction from flat fields
+    const { metaTitle, metaDescription, keywords, metadata } = req.body;
+    
     allowed.forEach((f) => { 
-      if (req.body[f] !== undefined) updates[f] = req.body[f]; 
+      if (req.body[f] !== undefined) {
+        // Skip flat metadata fields as we'll construct metadata object separately
+        if (f !== 'metadata' || (metadata && typeof metadata === 'object')) {
+          updates[f] = req.body[f];
+        }
+      }
     });
+
+    // Construct metadata from flat fields if they exist
+    if (metaTitle !== undefined || metaDescription !== undefined || keywords !== undefined) {
+      updates.metadata = {
+        metaTitle: metaTitle || '',
+        metaDescription: metaDescription || '',
+        keywords: Array.isArray(keywords) ? keywords : [],
+      };
+    }
 
     // اگر slug جدید ارسال شده، بررسی یکتایی
     if (req.body.slug) {
@@ -155,6 +210,7 @@ const deleteLandingPage = async (req, res) => {
 module.exports = { 
   getLandingPages, 
   getLandingPageBySlug, 
+  getLandingPageById,
   createLandingPage, 
   updateLandingPage, 
   deleteLandingPage 
