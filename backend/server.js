@@ -17,11 +17,35 @@ app.set('trust proxy', Number(process.env.TRUST_PROXY ?? 1));
 
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 
-// CORS Configuration
+// CORS Configuration - Support multiple origins
+// با معماری Vercel Proxy، تمام درخواست‌های Client-Side از همین Origins می‌آیند
+// Server-Side requests از Vercel (INTERNAL_API_URL) نیاز به CORS ندارند
+const allowedOrigins = [
+  'http://localhost:3000',           // Development
+  'https://radif-ecu.ir',            // Production
+  'https://www.radif-ecu.ir',        // WWW subdomain
+  'https://radif-ecu.vercel.app',    // Vercel preview deployments
+  process.env.CLIENT_URL             // Custom client URL از .env
+].filter(Boolean);
+
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? process.env.CLIENT_URL || 'http://localhost'
-    : true, // در محیط development هر originی را می‌پذیرد
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, Postman, curl)
+    if (!origin) return callback(null, true);
+    
+    // In development, allow any origin
+    if (process.env.NODE_ENV !== 'production') {
+      return callback(null, true);
+    }
+    
+    // In production, check against whitelist
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('Blocked by CORS:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   optionsSuccessStatus: 200
 };

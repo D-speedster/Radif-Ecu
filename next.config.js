@@ -60,7 +60,15 @@ const nextConfig = {
     return config;
   },
   async rewrites() {
-    return [{ source: '/api/:path*', destination: `${BACKEND_ORIGIN}/api/:path*` }];
+    // Proxy تمام درخواست‌های /api/* به Backend
+    // Next.js به صورت خودکار Headers، Cookies، و Query Strings را forward می‌کند
+    // این باعث می‌شود Browser فقط با Domain اصلی ارتباط داشته باشد
+    return [
+      {
+        source: '/api/:path*',
+        destination: `${BACKEND_ORIGIN}/api/:path*`,
+      },
+    ];
   },
   async headers() {
     return [

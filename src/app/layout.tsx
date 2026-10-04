@@ -141,8 +141,10 @@ export default function RootLayout({
           type="font/woff2"
           crossOrigin="anonymous"
         />
-        {/* Preconnect to backend API */}
-        <link rel="preconnect" href={process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'} />
+        {/* Preconnect در Production لازم نیست چون API از همان Origin است */}
+        {process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_API_URL && (
+          <link rel="preconnect" href={process.env.NEXT_PUBLIC_API_URL} />
+        )}
         {/* Schema Markup */}
         <script
           type="application/ld+json"

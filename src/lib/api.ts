@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+// در Production: /api (که از طریق Vercel به VPS proxy می‌شود)
+// در Development: http://localhost:5000/api (مستقیم به Backend محلی)
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 const api = axios.create({
@@ -7,7 +9,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true, // برای ارسال cookies
+  withCredentials: true, // برای ارسال cookies (مهم برای Authentication)
 });
 
 // Interceptor برای خطاها
