@@ -108,6 +108,24 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl">
       <head>
+        {/* Inline critical CSS for immediate render */}
+        <style dangerouslySetInnerHTML={{ __html: `
+          /* Critical font-face declarations */
+          @font-face{font-family:'YekanBakh';src:url('/fonts/YekanBakhFaNum-Bold-CMNT45Oa.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}
+          @font-face{font-family:'YekanBakh';src:url('/fonts/YekanBakhFaNum-ExtraBold-CdMhak6a.woff2') format('woff2');font-weight:800;font-style:normal;font-display:swap}
+          
+          /* Critical CSS - Above the fold styles only */
+          *{box-sizing:border-box;padding:0;margin:0}
+          html,body{max-width:100vw;overflow-x:hidden;direction:rtl;text-align:right}
+          body{font-family:"YekanBakh",Tahoma,sans-serif;background-color:#F4F5F6;color:#1A1F2E}
+          .min-h-screen{min-height:100vh}
+          .flex{display:flex}
+          .flex-col{flex-direction:column}
+          .bg-bg{background-color:#F4F5F6}
+          .text-text{color:#1A1F2E}
+          .antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+        ` }} />
+        
         {/* Preload critical fonts */}
         <link
           rel="preload"
