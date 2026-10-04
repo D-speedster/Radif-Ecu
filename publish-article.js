@@ -1,63 +1,84 @@
-// اسکریپت Node.js برای درج مقاله (بهترین روش برای UTF-8)
+#!/usr/bin/env node
+// اسکریپت انتشار مقاله در دیتابیس
 
+require('dotenv').config({ path: './backend/.env' });
+const mongoose = require('mongoose');
 const fs = require('fs');
-const http = require('http');
+const path = require('path');
 
-// خواندن فایل JSON
-const articleData = fs.readFileSync('./.agents/tasks/engine-knock-article.json', 'utf8');
+// تعریف مدل Article
+const articleSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  slug: { type: String, required: true, unique: true },
+  excerpt: { type: String, required: true },
+  content: { type: String, required: true },
+  category: { type: String, required: true },
+  published: { type: Boolean, default: false },
+  isPrivate: { type: Boolean, default: false },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
+});
 
-// تنظیمات درخواست
-const options = {
-  hostname: 'localhost',
-  port: 5000,
-  path: '/api/articles',
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json; charset=utf-8',
-    'Content-Length': Buffer.byteLength(articleData, 'utf8')
-    // اگر نیاز به احراز هویت دارید:
-    // 'Authorization': 'Bearer YOUR_TOKEN_HERE'
-  }
-};
+const Article = mongoose.model('Article', articleSchema);
 
-console.log('🚀 در حال ارسال مقاله به API...\n');
+async function publishArticle() {
+  try {
+    console.log('╔════════════════════════════════════════╗');
+    console.log('║   انتشار مقاله در دیتابیس          ║');
+    console.log('╚════════════════════════════════════════╝\n');
 
-const req = http.request(options, (res) => {
-  let data = '';
+    // خواندن فایل JSON
+    const articlePath = path.join(__dirname, '.agents', 'tasks', 'engine-knock-article.json');
+    const articleData = JSON.parse(fs.readFileSync(articlePath, 'utf8'));
 
-  res.on('data', (chunk) => {
-    data += chunk;
-  });
+    // اتصال به دیتابیس
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log('✅ متصل به MongoDB\n');
 
-  res.on('end', () => {
-    if (res.statusCode === 201 || res.statusCode === 200) {
-      try {
-        const response = JSON.parse(data);
-        console.log('✅ مقاله با موفقیت منتشر شد!\n');
-        console.log(`📝 عنوان: ${response.title || 'رفع ناک ماشین'}`);
-        console.log(`🆔 ID: ${response._id || response.id}`);
-        console.log(`🔗 URL: http://localhost:3000/wiki/rafeh-nak-mashin\n`);
-      } catch (e) {
-        console.log('✅ مقاله منتشر شد!');
-        console.log('🔗 URL: http://localhost:3000/wiki/rafeh-nak-mashin\n');
-      }
-    } else {
-      console.log(`❌ خطا: ${res.statusCode} ${res.statusMessage}`);
-      console.log(data);
+    // بررسی وجود مقاله
+    const existing = await Article.findOne({ slug: articleData.slug });
+    
+    if (existing) {
+      console.log('⚠️  مقاله با این slug قبلاً وجود دارد!');
+      console.log(`   عنوان: ${existing.title}`);
+      console.log(`   Slug: ${existing.slug}`);
+      console.log(`   تاریخ ایجاد: ${existing.createdAt.toLocaleDateString('fa-IR')}\n`);
+      
+      const readline = require('readline').createInterface({
+        input: process.stdin,
+        output: process.stdout
+      });
+      
+      process.exit(0);
     }
-  });
-});
 
-req.on('error', (error) => {
-  console.error('❌ خطا در اتصال به API:');
-  console.error(error.message);
-  console.log('\n💡 راهنمایی:');
-  console.log('1. مطمئن شوید backend در حال اجراست:');
-  console.log('   cd backend');
-  console.log('   npm start');
-  console.log('2. پورت backend روی 5000 باشد');
-});
+    // ایجاد مقاله جدید
+    const article = new Article(articleData);
+    await article.save();
 
-// ارسال داده
-req.write(articleData);
-req.end();
+    console.log('✅ مقاله با موفقیت منتشر شد!\n');
+    console.log('📄 اطلاعات مقاله:');
+    console.log(`   عنوان: ${article.title}`);
+    console.log(`   Slug: ${article.slug}`);
+    console.log(`   دسته: ${article.category}`);
+    console.log(`   منتشر شده: ${article.published ? '✅ بله' : '❌ خیر'}`);
+    console.log(`   خصوصی: ${article.isPrivate ? '🔒 بله' : '🌐 خیر'}`);
+    console.log(`   طول محتوا: ${article.content.length} کاراکتر`);
+    console.log(`   تاریخ: ${article.createdAt.toLocaleDateString('fa-IR')}\n`);
+
+    console.log('🔗 لینک‌ها:');
+    console.log(`   صفحه مقاله: https://radif-ecu.ir/wiki/${article.slug}`);
+    console.log(`   API: https://radif-ecu.ir/api/articles/${article.slug}\n`);
+
+  } catch (error) {
+    console.error('\n❌ خطا:', error.message);
+    if (error.code === 11000) {
+      console.error('   این slug قبلاً استفاده شده است.');
+    }
+  } finally {
+    await mongoose.disconnect();
+    console.log('🔌 اتصال بسته شد.\n');
+  }
+}
+
+publishArticle();
