@@ -22,7 +22,7 @@ const nextConfig = {
   },
   experimental: {
     optimizeCss: true, // Enable CSS optimization
-    optimizePackageImports: ['lucide-react', '@tiptap/react', '@tiptap/starter-kit'], // Optimize imports
+    optimizePackageImports: ['lucide-react'], // Optimize icon imports
   },
   // Modular imports to reduce bundle size
   modularizeImports: {
@@ -46,6 +46,15 @@ const nextConfig = {
         new webpack.DefinePlugin({
           'process.env.BROWSERSLIST_ENV': JSON.stringify('modern'),
         })
+      );
+      
+      // Replace Next.js polyfills with empty module for modern browsers
+      // This removes Array.flat, Object.fromEntries, Array.at, etc.
+      config.plugins.push(
+        new webpack.NormalModuleReplacementPlugin(
+          /next[\\/]dist[\\/]build[\\/]polyfills[\\/]polyfill-module/,
+          require.resolve('./polyfills-noop.js')
+        )
       );
     }
     return config;

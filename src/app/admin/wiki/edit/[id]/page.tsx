@@ -2,12 +2,22 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import Card from '@/components/ui/Card';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
-import TipTapEditor from '@/components/admin/TipTapEditor';
 import { Save, Eye, Loader2, ArrowRight, AlertCircle } from 'lucide-react';
 import api from '@/lib/api';
+
+// Dynamic import for TipTap editor to reduce initial bundle size
+const TipTapEditor = dynamic(() => import('@/components/admin/TipTapEditor'), {
+  ssr: false,
+  loading: () => (
+    <div className="border-2 border-gray-700 rounded-lg p-8 text-center text-gray-medium">
+      در حال بارگذاری ویرایشگر...
+    </div>
+  ),
+});
 
 const generateSlug = (title: string): string => {
   return title

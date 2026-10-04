@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import dynamic from 'next/dynamic';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
@@ -28,7 +29,7 @@ interface TipTapEditorProps {
   onChange: (html: string) => void;
 }
 
-export default function TipTapEditor({ content, onChange }: TipTapEditorProps) {
+function TipTapEditor({ content, onChange }: TipTapEditorProps) {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -226,3 +227,14 @@ export default function TipTapEditor({ content, onChange }: TipTapEditorProps) {
     </div>
   );
 }
+
+// Export as a dynamic component to enable code splitting
+// TipTap will only be loaded on pages that use this editor (admin pages)
+export default dynamic(() => Promise.resolve(TipTapEditor), {
+  ssr: false, // Disable SSR for editor (it's client-only anyway)
+  loading: () => (
+    <div className="border-2 border-gray-700 rounded-lg p-8 text-center text-gray-medium">
+      در حال بارگذاری ویرایشگر...
+    </div>
+  ),
+});
