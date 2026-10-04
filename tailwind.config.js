@@ -39,4 +39,11 @@ module.exports = {
   plugins: [
     require('@tailwindcss/typography'),
   ],
+  // Optimize for production
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
+  experimental: {
+    optimizeUniversalDefaults: true,
+  },
 }

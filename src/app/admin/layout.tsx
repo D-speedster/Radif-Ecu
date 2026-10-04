@@ -53,8 +53,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#F5F5F5' }}>
       {/* Sidebar Desktop */}
-      <aside className="hidden lg:fixed lg:inset-y-0 lg:right-0 lg:flex lg:w-64 lg:flex-col">
-        <div className="flex h-screen flex-col border-l" style={{ backgroundColor: '#FFFFFF', borderColor: '#E0E0E0' }}>
+      <aside className="hidden lg:fixed lg:top-0 lg:bottom-0 lg:right-0 lg:flex lg:w-64 lg:flex-col lg:z-40">
+        <div className="flex h-full flex-col border-l" style={{ backgroundColor: '#FFFFFF', borderColor: '#E0E0E0' }}>
           {/* Header */}
           <div className="flex items-center gap-3 p-6 border-b flex-shrink-0" style={{ borderColor: '#E0E0E0' }}>
             <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#EBF5FF' }}>
@@ -216,7 +216,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       )}
 
       {/* Main Content */}
-      <main className="lg:pl-64 min-h-screen">
+      <main className="lg:mr-64 min-h-screen">
         <div className="pt-16 lg:pt-0 p-4 lg:p-8">{children}</div>
       </main>
     </div>

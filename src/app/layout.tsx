@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
-import { AuthProvider } from "@/context/AuthContext";
-import Analytics from "@/components/analytics/Analytics";
-import StickyContactBar from "@/components/layout/StickyContactBar";
 import { business } from "@/config/business";
+import RootLayoutClient from "@/components/layout/RootLayoutClient";
 
 
 export const metadata: Metadata = {
@@ -112,20 +108,31 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl">
       <head>
+        {/* Preload critical fonts */}
+        <link
+          rel="preload"
+          href="/fonts/YekanBakhFaNum-Bold-CMNT45Oa.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/YekanBakhFaNum-ExtraBold-CdMhak6a.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        {/* Preconnect to backend API */}
+        <link rel="preconnect" href={process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'} />
         {/* Schema Markup */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(businessSchema) }}
         />
       </head>
-      <body className="min-h-screen flex flex-col bg-bg text-text antialiased pb-16 md:pb-0">
-        <AuthProvider>
-          <Analytics />
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <StickyContactBar />
-        </AuthProvider>
+      <body className="min-h-screen flex flex-col bg-bg text-text antialiased">
+        <RootLayoutClient>{children}</RootLayoutClient>
       </body>
     </html>
   );
