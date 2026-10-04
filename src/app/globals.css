@@ -114,6 +114,34 @@ body {
   font-family: "YekanBakh", sans-serif;
   background-color: var(--color-bg);
   color: var(--color-text);
+  /* Prevent horizontal scroll on mobile */
+  position: relative;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Ensure all containers respect viewport width */
+.container {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Force text to wrap and prevent overflow */
+h1, h2, h3, h4, h5, h6, p, li, span, a, div {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Prevent wide elements from causing horizontal scroll */
+img, video, iframe, embed {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Ensure grid and flex containers wrap properly */
+.grid, [class*="grid-"], [class*="flex"] {
+  max-width: 100%;
 }
 
 /* کارت‌ها روی پس‌زمینه bg */

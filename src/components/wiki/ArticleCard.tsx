@@ -22,7 +22,7 @@ export default function ArticleCard({ article }: ArticleCardProps) {
     truncateText(article.content.replace(/<[^>]*>/g, ''), 150);
 
   return (
-    <Card hover className="h-full flex flex-col">
+    <Card hover className="h-full flex flex-col min-w-0 overflow-hidden">
       {/* دسته‌بندی */}
       <div className="mb-4">
         <Badge variant="primary">{article.category}</Badge>
@@ -30,21 +30,21 @@ export default function ArticleCard({ article }: ArticleCardProps) {
 
       {/* عنوان */}
       <Link href={articleUrl}>
-        <h3 className="text-xl font-bold mb-3 hover:text-[var(--color-btn-hover)] transition-colors line-clamp-2" style={{ color: '#252525' }}>
+        <h3 className="text-xl font-bold mb-3 hover:text-[var(--color-btn-hover)] transition-colors line-clamp-2 break-words" style={{ color: '#252525' }}>
           {article.title}
         </h3>
       </Link>
 
       {/* خلاصه */}
-      <p className="text-[var(--color-muted)] mb-4 flex-1 line-clamp-3 leading-relaxed">
+      <p className="text-[var(--color-muted)] mb-4 flex-1 line-clamp-3 leading-relaxed break-words">
         {excerpt}
       </p>
 
       {/* تاریخ و دکمه */}
-      <div className="flex items-center justify-between pt-4 border-t border-[var(--color-border)]">
-        <div className="flex items-center gap-2 text-sm text-[var(--color-muted)]">
-          <Calendar className="w-4 h-4" />
-          <span>{toJalali(article.createdAt)}</span>
+      <div className="flex items-center justify-between pt-4 border-t border-[var(--color-border)] gap-2 flex-wrap">
+        <div className="flex items-center gap-2 text-sm text-[var(--color-muted)] flex-shrink-0">
+          <Calendar className="w-4 h-4 flex-shrink-0" />
+          <span className="whitespace-nowrap">{toJalali(article.createdAt)}</span>
         </div>
         <Link href={articleUrl}>
           <Button variant="secondary" size="sm">

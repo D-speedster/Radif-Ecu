@@ -68,17 +68,17 @@ export default function WikiList() {
   }, [searchQuery, selectedCategory, articles]);
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)]">
-      <div className="container mx-auto px-4 py-12 md:py-16">
+    <div className="min-h-screen bg-[var(--color-bg)] overflow-x-hidden">
+      <div className="container mx-auto px-4 py-12 md:py-16 max-w-full overflow-x-hidden">
         {/* هدر */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <BookOpen className="w-10 h-10 text-[var(--color-primary-light)]" />
-            <h1 className="text-3xl md:text-4xl font-bold text-[var(--color-text)]">
+        <div className="text-center mb-12 max-w-full">
+          <div className="flex items-center justify-center gap-3 mb-4 flex-wrap">
+            <BookOpen className="w-10 h-10 text-[var(--color-primary-light)] flex-shrink-0" />
+            <h1 className="text-3xl md:text-4xl font-bold text-[var(--color-text)] break-words">
               دانشنامه ECU
             </h1>
           </div>
-          <p className="text-[var(--color-muted)] text-lg max-w-2xl mx-auto">
+          <p className="text-[var(--color-muted)] text-lg max-w-2xl mx-auto break-words px-4">
             آموزش‌های تخصصی، نکات کاربردی و راهنمای کامل تعمیرات ECU
           </p>
         </div>
@@ -94,7 +94,7 @@ export default function WikiList() {
 
         {/* فیلتر دسته‌بندی */}
         {categories.length > 0 && (
-          <div className="mb-12">
+          <div className="mb-12 max-w-full overflow-x-hidden">
             <h2 className="text-lg font-bold text-[var(--color-text)] mb-4">دسته‌بندی:</h2>
             <CategoryFilter
               categories={categories}
@@ -124,8 +124,8 @@ export default function WikiList() {
         {!loading && !error && (
           <>
             {/* تعداد نتایج */}
-            <div className="mb-6">
-              <p className="text-[var(--color-muted)]">
+            <div className="mb-6 max-w-full">
+              <p className="text-[var(--color-muted)] break-words">
                 {filteredArticles.length} مقاله یافت شد
                 {searchQuery && ` برای "${searchQuery}"`}
               </p>
@@ -135,14 +135,14 @@ export default function WikiList() {
             {filteredArticles.length === 0 ? (
               <div className="text-center py-20">
                 <BookOpen className="w-16 h-16 text-[var(--color-muted)] mx-auto mb-4" />
-                <p className="text-[var(--color-muted)] text-lg">
+                <p className="text-[var(--color-muted)] text-lg break-words px-4">
                   {searchQuery || selectedCategory !== 'all'
                     ? 'نتیجه‌ای یافت نشد'
                     : 'هنوز مقاله‌ای منتشر نشده است'}
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-full">
                 {filteredArticles.map((article) => (
                   <ArticleCard key={article._id} article={article} />
                 ))}
