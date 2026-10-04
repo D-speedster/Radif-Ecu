@@ -60,10 +60,11 @@ app.use((req, res, next) => {
   req.params = mongoSanitize.sanitize(req.params);
   next();
 });
-app.use('/api/auth',         require('./routes/authRoutes'));
-app.use('/api/appointments', require('./routes/appointmentRoutes'));
-app.use('/api/articles',     require('./routes/articleRoutes'));
-app.use('/api/contact',      require('./routes/contactRoutes'));
+app.use('/api/auth',          require('./routes/authRoutes'));
+app.use('/api/appointments',  require('./routes/appointmentRoutes'));
+app.use('/api/articles',      require('./routes/articleRoutes'));
+app.use('/api/contact',       require('./routes/contactRoutes'));
+app.use('/api/landing-pages', require('./routes/landingPageRoutes'));
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ success: true, status: 'online', timestamp: new Date().toISOString() });
