@@ -34,7 +34,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const response = await api.get('/auth/me');
       setUser(response.data);
-    } catch (error) {
+    } catch (error: any) {
+      // خطای 401 طبیعی است - کاربر لاگین نکرده
+      if (error.response?.status !== 401) {
+        console.error('خطا در بررسی احراز هویت:', error);
+      }
       setUser(null);
     } finally {
       setLoading(false);

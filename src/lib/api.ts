@@ -16,6 +16,11 @@ const api = axios.create({
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    // خطای 401 برای /auth/me را نادیده بگیر (کاربر لاگین نکرده)
+    if (error.config?.url?.includes('/auth/me') && error.response?.status === 401) {
+      return Promise.reject(error);
+    }
+
     if (error.response) {
       // خطای از سمت سرور
       console.error('API Error:', error.response.data);
