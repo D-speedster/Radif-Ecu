@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         type: 'website',
       },
       alternates: {
-        canonical: `/landing/${params.slug}`,
+        canonical: `/page/${params.slug}`,
       },
     };
   } catch (error) {

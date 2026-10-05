@@ -258,7 +258,7 @@ export default function AdminLandingPagesPage() {
                   </Link>
 
                   {/* مشاهده */}
-                  <a href={`/${landingPage.slug}`} target="_blank" rel="noopener noreferrer" className="flex-1 lg:flex-none">
+                  <a href={`/page/${landingPage.slug}`} target="_blank" rel="noopener noreferrer" className="flex-1 lg:flex-none">
                     <button className="w-full px-4 py-2 border rounded-lg transition-all text-sm font-medium flex items-center justify-center gap-2"
                       style={{ backgroundColor: '#F5F3FF', color: '#7C3AED', borderColor: '#DDD6FE' }}>
                       <ExternalLink className="w-4 h-4" />
