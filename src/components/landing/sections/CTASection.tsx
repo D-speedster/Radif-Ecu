@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Button from '@/components/ui/Button';
 
 interface CTASectionProps {
-  data: {
+  data?: {
     title?: string;
     subtitle?: string;
     primaryCtaText?: string;
@@ -23,7 +23,7 @@ export default function CTASection({ data }: CTASectionProps) {
     secondaryCtaText,
     secondaryCtaLink,
     bgColor = '#252525',
-  } = data;
+  } = data || {};
 
   return (
     <section className="py-20" style={{ backgroundColor: bgColor }}>

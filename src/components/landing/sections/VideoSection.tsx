@@ -1,8 +1,8 @@
 import React from 'react';
 
 interface VideoSectionProps {
-  data: {
-    videoUrl: string;
+  data?: {
+    videoUrl?: string;
     title?: string;
     subtitle?: string;
     bgColor?: string;
@@ -10,7 +10,9 @@ interface VideoSectionProps {
 }
 
 export default function VideoSection({ data }: VideoSectionProps) {
-  const { videoUrl, title, subtitle, bgColor = '#FFFFFF' } = data;
+  const { videoUrl, title, subtitle, bgColor = '#FFFFFF' } = data || {};
+
+  if (!videoUrl) return null;
 
   return (
     <section className="py-20" style={{ backgroundColor: bgColor }}>

@@ -8,10 +8,10 @@ interface Feature {
 }
 
 interface FeaturesSectionProps {
-  data: {
+  data?: {
     title?: string;
     subtitle?: string;
-    features: Feature[];
+    features?: Feature[];
     bgColor?: string;
   };
 }
@@ -26,7 +26,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 export default function FeaturesSection({ data }: FeaturesSectionProps) {
-  const { title, subtitle, features, bgColor = '#FFFFFF' } = data;
+  const { title, subtitle, features = [], bgColor = '#FFFFFF' } = data || {};
 
   return (
     <section className="py-20" style={{ backgroundColor: bgColor }}>

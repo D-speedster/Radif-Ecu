@@ -10,16 +10,16 @@ interface Testimonial {
 }
 
 interface TestimonialsSectionProps {
-  data: {
+  data?: {
     title?: string;
     subtitle?: string;
-    testimonials: Testimonial[];
+    testimonials?: Testimonial[];
     bgColor?: string;
   };
 }
 
 export default function TestimonialsSection({ data }: TestimonialsSectionProps) {
-  const { title, subtitle, testimonials, bgColor = '#F5F5F5' } = data;
+  const { title, subtitle, testimonials = [], bgColor = '#F5F5F5' } = data || {};
 
   return (
     <section className="py-20" style={{ backgroundColor: bgColor }}>

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Button from '@/components/ui/Button';
 
 interface HeroSectionProps {
-  data: {
+  data?: {
     title?: string;
     subtitle?: string;
     imageUrl?: string;
@@ -22,7 +22,7 @@ export default function HeroSection({ data }: HeroSectionProps) {
     ctaText,
     ctaLink,
     bgColor = '#F5F5F5',
-  } = data;
+  } = data || {};
 
   return (
     <section className="relative py-20 lg:py-32" style={{ backgroundColor: bgColor }}>

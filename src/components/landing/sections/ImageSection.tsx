@@ -2,8 +2,8 @@ import React from 'react';
 import Image from 'next/image';
 
 interface ImageSectionProps {
-  data: {
-    imageUrl: string;
+  data?: {
+    imageUrl?: string;
     alt?: string;
     caption?: string;
     fullWidth?: boolean;
@@ -12,7 +12,9 @@ interface ImageSectionProps {
 }
 
 export default function ImageSection({ data }: ImageSectionProps) {
-  const { imageUrl, alt, caption, fullWidth = false, bgColor = '#FFFFFF' } = data;
+  const { imageUrl, alt, caption, fullWidth = false, bgColor = '#FFFFFF' } = data || {};
+
+  if (!imageUrl) return null;
 
   return (
     <section className="py-20" style={{ backgroundColor: bgColor }}>

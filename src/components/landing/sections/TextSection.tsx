@@ -1,16 +1,18 @@
 import React from 'react';
 
 interface TextSectionProps {
-  data: {
+  data?: {
     title?: string;
-    content: string;
+    content?: string;
     align?: 'left' | 'center' | 'right';
     bgColor?: string;
   };
 }
 
 export default function TextSection({ data }: TextSectionProps) {
-  const { title, content, align = 'right', bgColor = '#FFFFFF' } = data;
+  const { title, content, align = 'right', bgColor = '#FFFFFF' } = data || {};
+
+  if (!content) return null;
 
   const alignClass = {
     left: 'text-left',

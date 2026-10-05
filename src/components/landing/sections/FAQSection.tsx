@@ -9,16 +9,16 @@ interface FAQItem {
 }
 
 interface FAQSectionProps {
-  data: {
+  data?: {
     title?: string;
     subtitle?: string;
-    faqs: FAQItem[];
+    faqs?: FAQItem[];
     bgColor?: string;
   };
 }
 
 export default function FAQSection({ data }: FAQSectionProps) {
-  const { title, subtitle, faqs, bgColor = '#FFFFFF' } = data;
+  const { title, subtitle, faqs = [], bgColor = '#FFFFFF' } = data || {};
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleFAQ = (index: number) => {
