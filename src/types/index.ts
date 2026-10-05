@@ -47,3 +47,24 @@ export interface Service {
   description: string;
   icon: string;
 }
+
+// Landing Page Types
+export interface LandingPageSection {
+  type: 'hero' | 'features' | 'cta' | 'text' | 'image' | 'video' | 'testimonials' | 'faq';
+  data: any;
+}
+
+export interface LandingPage {
+  _id: string;
+  title: string;
+  slug: string;
+  category: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  keywords?: string[];
+  sections: LandingPageSection[];
+  schema?: any;
+  published: boolean;
+  createdAt: string;
+  updatedAt: string;
+}

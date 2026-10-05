@@ -9,11 +9,11 @@ import Button from '@/components/ui/Button';
 import { Save, Eye, Loader2, ArrowRight, AlertCircle } from 'lucide-react';
 import api from '@/lib/api';
 
-// Dynamic import for TipTap editor to reduce initial bundle size
-const TipTapEditor = dynamic(() => import('@/components/admin/TipTapEditor'), {
+// Dynamic import for Rich Text Editor (TipTap)
+const RichTextEditor = dynamic(() => import('@/components/editor/RichTextEditor'), {
   ssr: false,
   loading: () => (
-    <div className="border-2 border-gray-700 rounded-lg p-8 text-center text-gray-medium">
+    <div className="border-2 rounded-lg p-8 text-center" style={{ borderColor: '#E5E5E5', color: '#7D7D7D' }}>
       در حال بارگذاری ویرایشگر...
     </div>
   ),
@@ -204,9 +204,10 @@ export default function NewArticlePage() {
             <label className="block text-sm font-medium mb-2" style={{ color: '#252525' }}>
               محتوای مقاله *
             </label>
-            <TipTapEditor
+            <RichTextEditor
               content={formData.content}
               onChange={(html) => setFormData({ ...formData, content: html })}
+              placeholder="محتوای مقاله خود را اینجا بنویسید..."
             />
             <p className="text-xs mt-2" style={{ color: '#7D7D7D' }}>
               تعداد کلمات تقریبی:{' '}

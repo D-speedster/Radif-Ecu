@@ -5,6 +5,7 @@ import { Calendar, Download, ArrowRight, BookOpen } from 'lucide-react';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
+import ArticleContent from '@/components/wiki/ArticleContent';
 import { Article } from '@/types';
 import { toJalali } from '@/lib/utils';
 import { notFound } from 'next/navigation';
@@ -206,22 +207,7 @@ export default async function ArticlePage({
                 </div>
 
                 {/* محتوای مقاله */}
-                <div
-                  className="prose prose-invert max-w-none
-                    prose-headings:text-[var(--color-text)] prose-headings:font-bold
-                    prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4
-                    prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3
-                    prose-p:text-[var(--color-text)] prose-p:leading-relaxed prose-p:mb-4
-                    prose-a:text-[var(--color-primary-light)] prose-a:no-underline hover:prose-a:underline
-                    prose-strong:text-[var(--color-text)] prose-strong:font-bold
-                    prose-ul:text-[var(--color-text)] prose-ul:list-disc prose-ul:mr-6
-                    prose-ol:text-[var(--color-text)] prose-ol:list-decimal prose-ol:mr-6
-                    prose-li:mb-2
-                    prose-code:text-[var(--color-primary-light)] prose-code:bg-[var(--color-surface)] prose-code:px-2 prose-code:py-1 prose-code:rounded
-                    prose-pre:bg-[var(--color-surface)] prose-pre:border prose-pre:border-[var(--color-border)]
-                    prose-img:rounded-lg prose-img:border prose-img:border-[var(--color-border)]"
-                  dangerouslySetInnerHTML={{ __html: article.content }}
-                />
+                <ArticleContent content={article.content} />
 
                 {/* دانلود فایل */}
                 {article.downloadUrl && (

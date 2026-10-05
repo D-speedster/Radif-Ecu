@@ -60,11 +60,15 @@ app.use((req, res, next) => {
   req.params = mongoSanitize.sanitize(req.params);
   next();
 });
+
+// Serve static files (uploaded images)
+app.use('/uploads', express.static('public/uploads'));
 app.use('/api/auth',          require('./routes/authRoutes'));
 app.use('/api/appointments',  require('./routes/appointmentRoutes'));
 app.use('/api/articles',      require('./routes/articleRoutes'));
 app.use('/api/contact',       require('./routes/contactRoutes'));
 app.use('/api/landing-pages', require('./routes/landingPageRoutes'));
+app.use('/api/upload',        require('./routes/uploadRoutes'));
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ success: true, status: 'online', timestamp: new Date().toISOString() });
