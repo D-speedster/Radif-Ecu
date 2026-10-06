@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   try {
     const response = await fetch(
       `${process.env.INTERNAL_API_URL || 'http://localhost:5000/api'}/landing-pages/${params.slug}`,
-      { next: { revalidate: 60 } }
+      { next: { revalidate: 10 } }
     );
 
     if (!response.ok) {
@@ -54,7 +54,7 @@ async function getLandingPage(slug: string): Promise<LandingPageType | null> {
   try {
     const response = await fetch(
       `${process.env.INTERNAL_API_URL || 'http://localhost:5000/api'}/landing-pages/${slug}`,
-      { next: { revalidate: 60 } }
+      { next: { revalidate: 10 } }
     );
 
     if (!response.ok) {
