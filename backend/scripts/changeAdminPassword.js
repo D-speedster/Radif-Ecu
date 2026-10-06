@@ -11,7 +11,13 @@ const rl = readline.createInterface({
 async function changeAdminPassword() {
   try {
     // Connect to MongoDB
-    await mongoose.connect(process.env.MONGODB_URI);
+    const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
+    if (!mongoUri) {
+      console.log('❌ MongoDB URI not found in .env file!');
+      console.log('Please set MONGODB_URI or MONGO_URI in .env');
+      process.exit(1);
+    }
+    await mongoose.connect(mongoUri);
     console.log('✅ Connected to MongoDB');
 
     // Import User model
