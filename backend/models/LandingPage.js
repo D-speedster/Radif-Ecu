@@ -22,19 +22,15 @@ const landingPageSchema = new mongoose.Schema(
     content: {
       type: String,
       default: '',
-      // محتوای HTML صفحه (ویرایشگر غنی)
     },
     sections: {
       type: Array,
       default: [],
     },
     metadata: {
-      type: {
-        metaTitle: { type: String, trim: true, default: '' },
-        metaDescription: { type: String, trim: true, default: '' },
-        keywords: { type: [String], default: [] },
-      },
-      default: () => ({ metaTitle: '', metaDescription: '', keywords: [] }),
+      metaTitle: { type: String, default: '' },
+      metaDescription: { type: String, default: '' },
+      keywords: { type: [String], default: [] },
     },
     schema: {
       type: Object,
@@ -45,7 +41,11 @@ const landingPageSchema = new mongoose.Schema(
       default: true,
     },
   },
-  { versionKey: false, timestamps: true }
+  { 
+    versionKey: false, 
+    timestamps: true,
+    strict: false
+  }
 );
 
 landingPageSchema.index({ slug: 1 });
