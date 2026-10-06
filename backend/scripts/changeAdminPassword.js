@@ -23,22 +23,23 @@ async function changeAdminPassword() {
     // Import User model
     const User = require('../models/User');
 
-    // Prompt for username
-    const username = await new Promise((resolve) => {
-      rl.question('Enter admin username (default: speedster): ', (answer) => {
+    // Prompt for identifier
+    const identifier = await new Promise((resolve) => {
+      rl.question('Enter admin identifier (default: speedster): ', (answer) => {
         resolve(answer.trim() || 'speedster');
       });
     });
 
     // Find user
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ identifier }).select('+password');
     
     if (!user) {
       console.log('❌ User not found!');
+      console.log('Available identifiers: speedster, admin@radif-ecu.ir');
       process.exit(1);
     }
 
-    if (!user.isAdmin) {
+    if (user.role !== 'admin') {
       console.log('⚠️  Warning: This user is not an admin!');
     }
 
@@ -72,8 +73,9 @@ async function changeAdminPassword() {
     await user.save();
 
     console.log('✅ Password changed successfully!');
-    console.log(`Username: ${user.username}`);
-    console.log(`Role: ${user.isAdmin ? 'Admin' : 'User'}`);
+    console.log(`Identifier: ${user.identifier}`);
+    console.log(`Name: ${user.name}`);
+    console.log(`Role: ${user.role}`);
 
   } catch (error) {
     console.error('❌ Error:', error.message);
