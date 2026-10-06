@@ -76,18 +76,5 @@ export default async function CustomPage({ params }: PageProps) {
     notFound();
   }
 
-  // Inject structured data if available
-  const structuredData = landingPage.schema ? (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(landingPage.schema) }}
-    />
-  ) : null;
-
-  return (
-    <>
-      {structuredData}
-      <LandingPageView landingPage={landingPage} />
-    </>
-  );
+  return <LandingPageView landingPage={landingPage} />;
 }
