@@ -73,7 +73,7 @@ export default function ServicePage({
                 href={telHref}
                 className="inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium bg-[var(--color-btn-primary)] text-[var(--color-btn-text)] text-sm md:text-base"
               >
-                تماس: {business.phoneDisplay}
+                <span dir="ltr">تماس: {business.phoneDisplay}</span>
               </a>
               <a
                 href={whatsappHref(whatsappText)}

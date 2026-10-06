@@ -35,7 +35,7 @@ export default function Footer() {
           <ul className="space-y-2">
             <li>
               <a href={telHref} className="hover:text-[var(--amber)] transition-colors" style={{ color: 'var(--amber)', fontWeight: 700 }}>
-                {business.phoneDisplay}
+                <span dir="ltr">{business.phoneDisplay}</span>
               </a>
             </li>
             <li>{business.address}</li>

@@ -32,7 +32,7 @@ export default function HeroSection() {
               style={{ background: 'var(--amber)', color: 'var(--on-amber)' }}
             >
               <Phone className="w-5 h-5" />
-              تماس: {business.phoneDisplay}
+              <span dir="ltr">تماس: {business.phoneDisplay}</span>
             </a>
             <a
               href={whatsappHref('سلام، برای ریمپ / تعمیر ایسیو خودرو سؤال دارم.')}

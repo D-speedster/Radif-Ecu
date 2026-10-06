@@ -202,7 +202,7 @@ function TrackAppointmentContent() {
                 <div className="text-center">
                   <a href={telHref}>
                     <Button variant="secondary" size="lg">
-                      {business.phoneDisplay}
+                      <span dir="ltr">{business.phoneDisplay}</span>
                     </Button>
                   </a>
                 </div>

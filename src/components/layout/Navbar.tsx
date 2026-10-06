@@ -78,7 +78,7 @@ export default function Navbar() {
                 style={{ background: 'var(--amber)', color: 'var(--on-amber)' }}
               >
                 <Phone className="w-4 h-4" />
-                {business.phoneDisplay}
+                <span dir="ltr">{business.phoneDisplay}</span>
               </a>
             </div>
 
@@ -160,7 +160,7 @@ export default function Navbar() {
                 style={{ background: 'var(--amber)', color: 'var(--on-amber)' }}
               >
                 <Phone className="w-5 h-5" />
-                {business.phoneDisplay}
+                <span dir="ltr">{business.phoneDisplay}</span>
               </a>
             </div>
           </div>

@@ -18,7 +18,7 @@ export default function CTASection() {
             style={{ background: 'var(--amber)', color: 'var(--on-amber)' }}
           >
             <Phone className="w-5 h-5" />
-            {business.phoneDisplay}
+            <span dir="ltr">{business.phoneDisplay}</span>
           </a>
           <a
             href={whatsappHref('سلام، برای ریمپ / تعمیر ایسیو خودرو سؤال دارم.')}
