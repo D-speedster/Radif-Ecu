@@ -17,6 +17,24 @@ const isRequestAdmin = async (req) => {
   }
 };
 
+// GET published landing pages list for sitemap — public
+const getPublishedLandingPagesList = async (req, res) => {
+  try {
+    const landingPages = await LandingPage.find({ published: true })
+      .select('slug updatedAt createdAt')
+      .sort({ createdAt: -1 });
+    
+    res.status(200).json({ 
+      success: true, 
+      count: landingPages.length, 
+      landingPages 
+    });
+  } catch (error) {
+    console.error('getPublishedLandingPagesList Error:', error.message);
+    res.status(500).json({ success: false, message: 'خطای سرور. لطفاً دوباره تلاش کنید.' });
+  }
+};
+
 // GET all landing pages — admin only, returns all including unpublished
 const getLandingPages = async (req, res) => {
   try {
@@ -189,7 +207,8 @@ const deleteLandingPage = async (req, res) => {
 };
 
 module.exports = { 
-  getLandingPages, 
+  getLandingPages,
+  getPublishedLandingPagesList,
   getLandingPageBySlug, 
   getLandingPageById,
   createLandingPage, 

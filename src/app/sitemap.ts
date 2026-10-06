@@ -50,7 +50,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
 
     // دریافت landing pages از API
-    const landingPagesResponse = await fetch(`${API_URL}/landing-pages`, {
+    const landingPagesResponse = await fetch(`${API_URL}/landing-pages/published/list`, {
       next: { revalidate: 86400 },
     });
 

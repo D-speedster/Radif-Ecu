@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { 
-  getLandingPages, 
+  getLandingPages,
+  getPublishedLandingPagesList,
   getLandingPageBySlug, 
   getLandingPageById,
   createLandingPage, 
@@ -12,6 +13,9 @@ const { protect, admin } = require('../middleware/authMiddleware');
 
 // GET all landing pages — admin only
 router.get('/', protect, admin, getLandingPages);
+
+// GET published landing pages list for sitemap — public (must be before /:slug)
+router.get('/published/list', getPublishedLandingPagesList);
 
 // GET one by ID — admin only
 router.get('/by-id/:id', protect, admin, getLandingPageById);
