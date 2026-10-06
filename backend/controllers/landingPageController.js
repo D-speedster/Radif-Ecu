@@ -79,33 +79,29 @@ const getLandingPageById = async (req, res) => {
 // POST create new — admin only
 const createLandingPage = async (req, res) => {
   try {
-    const { title, slug, category, sections, metaTitle, metaDescription, keywords, metadata, schema, published } = req.body;
+    const { 
+      title, 
+      slug, 
+      category, 
+      content,
+      metaTitle, 
+      metaDescription, 
+      keywords, 
+      published 
+    } = req.body;
 
     if (!title) {
       return res.status(400).json({ success: false, message: 'عنوان الزامی است' });
-    }
-
-    // Construct metadata from flat fields or nested object
-    let metadataObj;
-    if (metadata && typeof metadata === 'object') {
-      // Frontend sent nested metadata object
-      metadataObj = metadata;
-    } else {
-      // Frontend sent flat fields
-      metadataObj = {
-        metaTitle: metaTitle || '',
-        metaDescription: metaDescription || '',
-        keywords: Array.isArray(keywords) ? keywords : [],
-      };
     }
 
     const landingPage = await LandingPage.create({
       title: title.trim(),
       slug: await uniqueSlug(LandingPage, slug || title),
       category: category ? category.trim() : '',
-      sections: sections || [],
-      metadata: metadataObj,
-      schema: schema || null,
+      content: content || '',
+      metaTitle: metaTitle || '',
+      metaDescription: metaDescription || '',
+      keywords: Array.isArray(keywords) ? keywords : [],
       published: published !== undefined ? Boolean(published) : true,
     });
 
@@ -126,29 +122,14 @@ const createLandingPage = async (req, res) => {
 // PUT update by :id — admin only
 const updateLandingPage = async (req, res) => {
   try {
-    const allowed = ['title', 'slug', 'category', 'sections', 'metadata', 'schema', 'published'];
+    const allowed = ['title', 'slug', 'category', 'content', 'metaTitle', 'metaDescription', 'keywords', 'published'];
     const updates = {};
-    
-    // Handle metadata construction from flat fields
-    const { metaTitle, metaDescription, keywords, metadata } = req.body;
     
     allowed.forEach((f) => { 
       if (req.body[f] !== undefined) {
-        // Skip flat metadata fields as we'll construct metadata object separately
-        if (f !== 'metadata' || (metadata && typeof metadata === 'object')) {
-          updates[f] = req.body[f];
-        }
+        updates[f] = req.body[f];
       }
     });
-
-    // Construct metadata from flat fields if they exist
-    if (metaTitle !== undefined || metaDescription !== undefined || keywords !== undefined) {
-      updates.metadata = {
-        metaTitle: metaTitle || '',
-        metaDescription: metaDescription || '',
-        keywords: Array.isArray(keywords) ? keywords : [],
-      };
-    }
 
     // اگر slug جدید ارسال شده، بررسی یکتایی
     if (req.body.slug) {

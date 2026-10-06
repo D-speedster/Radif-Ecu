@@ -23,18 +23,18 @@ const landingPageSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
-    sections: {
-      type: Array,
+    // SEO fields - flat structure
+    metaTitle: {
+      type: String,
+      default: '',
+    },
+    metaDescription: {
+      type: String,
+      default: '',
+    },
+    keywords: {
+      type: [String],
       default: [],
-    },
-    metadata: {
-      metaTitle: { type: String, default: '' },
-      metaDescription: { type: String, default: '' },
-      keywords: { type: [String], default: [] },
-    },
-    schema: {
-      type: Object,
-      default: null,
     },
     published: {
       type: Boolean,
@@ -44,7 +44,7 @@ const landingPageSchema = new mongoose.Schema(
   { 
     versionKey: false, 
     timestamps: true,
-    strict: false
+    strict: false // Allow extra fields
   }
 );
 

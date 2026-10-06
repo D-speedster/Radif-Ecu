@@ -72,9 +72,9 @@ export default function EditLandingPagePage() {
         slug: landingPage.slug,
         category: landingPage.category || '',
         content: landingPage.content || '',
-        metaTitle: landingPage.metadata?.metaTitle || '',
-        metaDescription: landingPage.metadata?.metaDescription || '',
-        keywords: landingPage.metadata?.keywords?.join(', ') || '',
+        metaTitle: landingPage.metaTitle || landingPage.metadata?.metaTitle || '',
+        metaDescription: landingPage.metaDescription || landingPage.metadata?.metaDescription || '',
+        keywords: (landingPage.keywords || landingPage.metadata?.keywords || []).join(', '),
         published: landingPage.published,
       });
 
