@@ -61,12 +61,16 @@ const nextConfig = {
   },
   async rewrites() {
     // Proxy تمام درخواست‌های /api/* به Backend
+    // و همچنین /uploads/* برای فایل‌های آپلود شده
     // Next.js به صورت خودکار Headers، Cookies، و Query Strings را forward می‌کند
-    // این باعث می‌شود Browser فقط با Domain اصلی ارتباط داشته باشد
     return [
       {
         source: '/api/:path*',
         destination: `${BACKEND_ORIGIN}/api/:path*`,
+      },
+      {
+        source: '/uploads/:path*',
+        destination: `${BACKEND_ORIGIN}/uploads/:path*`,
       },
     ];
   },

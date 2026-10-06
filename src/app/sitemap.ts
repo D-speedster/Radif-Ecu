@@ -45,29 +45,57 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // دریافت مقالات از API
   try {
-    const response = await fetch(`${API_URL}/articles`, {
+    const articlesResponse = await fetch(`${API_URL}/articles`, {
       next: { revalidate: 86400 }, // revalidate هر 24 ساعت
     });
 
-    if (!response.ok) {
+    // دریافت landing pages از API
+    const landingPagesResponse = await fetch(`${API_URL}/landing-pages`, {
+      next: { revalidate: 86400 },
+    });
+
+    const articlePages: MetadataRoute.Sitemap = [];
+    const landingPages: MetadataRoute.Sitemap = [];
+
+    // پردازش مقالات
+    if (articlesResponse.ok) {
+      const articlesData = await articlesResponse.json();
+      const articles = articlesData.articles || articlesData;
+
+      articlePages.push(
+        ...articles
+          .filter((article: { published?: boolean }) => article.published !== false)
+          .map((article: { slug?: string; _id: string; updatedAt?: string; createdAt: string }) => ({
+            url: `${SITE_URL}/wiki/${article.slug || article._id}`,
+            lastModified: new Date(article.updatedAt || article.createdAt),
+            changeFrequency: 'weekly' as const,
+            priority: 0.8,
+          }))
+      );
+    } else {
       console.error('خطا در دریافت مقالات برای sitemap');
-      return staticPages;
     }
 
-    const data = await response.json();
-    const articles = data.articles || data;
+    // پردازش landing pages
+    if (landingPagesResponse.ok) {
+      const landingPagesData = await landingPagesResponse.json();
+      const pages = landingPagesData.landingPages || landingPagesData;
 
-    // صفحات مقالات
-    const articlePages: MetadataRoute.Sitemap = articles
-      .filter((article: { published?: boolean }) => article.published !== false)
-      .map((article: { slug?: string; _id: string; updatedAt?: string; createdAt: string }) => ({
-        url: `${SITE_URL}/wiki/${article.slug || article._id}`,
-        lastModified: new Date(article.updatedAt || article.createdAt),
-        changeFrequency: 'weekly' as const,
-        priority: 0.8,
-      }));
+      landingPages.push(
+        ...pages
+          .filter((page: { published?: boolean }) => page.published !== false)
+          .map((page: { slug: string; updatedAt?: string; createdAt: string }) => ({
+            url: `${SITE_URL}/page/${page.slug}`,
+            lastModified: new Date(page.updatedAt || page.createdAt),
+            changeFrequency: 'weekly' as const,
+            priority: 0.7,
+          }))
+      );
+    } else {
+      console.error('خطا در دریافت landing pages برای sitemap');
+    }
 
-    return [...staticPages, ...articlePages];
+    return [...staticPages, ...articlePages, ...landingPages];
   } catch (error) {
     console.error('خطا در تولید sitemap:', error);
     return staticPages;
