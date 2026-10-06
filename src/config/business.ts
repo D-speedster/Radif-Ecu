@@ -3,7 +3,7 @@
 export const business = {
   name: 'ردیف ایسیو',
   phone: '09966500516',               // فرمت محلی برای tel:
-  phoneDisplay: '۰۹۹۶-۶۵۰-۰۵۱۶',
+  phoneDisplay: '0996 6500 516',
   whatsapp: '989966500516',           // بدون + و صفر اول؛ برای wa.me
   email: 'info@radif-ecu.ir',
   city: 'تهران',

@@ -4,26 +4,10 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
-import { Loader2, Plus, Trash2, Save, ArrowRight } from 'lucide-react';
+import { Loader2, Save, ArrowRight } from 'lucide-react';
 import api from '@/lib/api';
 import Link from 'next/link';
 import RichTextEditor from '@/components/editor/RichTextEditor';
-
-interface Section {
-  type: string;
-  data: string;
-}
-
-const sectionTypes = [
-  { value: 'hero', label: 'Hero (هیرو)' },
-  { value: 'features', label: 'Features (ویژگی‌ها)' },
-  { value: 'steps', label: 'Steps (مراحل)' },
-  { value: 'faq', label: 'FAQ (سوالات متداول)' },
-  { value: 'pricing', label: 'Pricing (قیمت‌گذاری)' },
-  { value: 'cta', label: 'CTA (فراخوان)' },
-  { value: 'text', label: 'Text (متن)' },
-  { value: 'contact', label: 'Contact (تماس)' },
-];
 
 export default function NewLandingPagePage() {
   const router = useRouter();
@@ -35,22 +19,16 @@ export default function NewLandingPagePage() {
     title: '',
     slug: '',
     category: '',
-    content: '', // ✅ اضافه شد
+    content: '',
     metaTitle: '',
     metaDescription: '',
     keywords: '',
     published: false,
-    schema: '',
   });
-
-  const [sections, setSections] = useState<Section[]>([
-    { type: 'hero', data: '{}' }
-  ]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-
 
     // Auto-generate slug from title
     if (name === 'title' && !formData.slug) {
@@ -69,22 +47,6 @@ export default function NewLandingPagePage() {
     setFormData((prev) => ({ ...prev, [name]: checked }));
   };
 
-  const addSection = () => {
-    setSections((prev) => [...prev, { type: 'text', data: '{}' }]);
-  };
-
-  const removeSection = (index: number) => {
-    setSections((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const updateSection = (index: number, field: 'type' | 'data', value: string) => {
-    setSections((prev) =>
-      prev.map((section, i) =>
-        i === index ? { ...section, [field]: value } : section
-      )
-    );
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -92,28 +54,6 @@ export default function NewLandingPagePage() {
     setSuccess('');
 
     try {
-      // Parse sections data
-      const parsedSections = sections.map((section) => {
-        try {
-          return {
-            type: section.type,
-            data: JSON.parse(section.data),
-          };
-        } catch {
-          throw new Error(`خطا در پارس JSON بخش ${section.type}`);
-        }
-      });
-
-      // Parse schema
-      let parsedSchema = undefined;
-      if (formData.schema.trim()) {
-        try {
-          parsedSchema = JSON.parse(formData.schema);
-        } catch {
-          throw new Error('خطا در پارس JSON Schema');
-        }
-      }
-
       // Parse keywords
       const keywordsArray = formData.keywords
         .split(',')
@@ -124,23 +64,23 @@ export default function NewLandingPagePage() {
         title: formData.title,
         slug: formData.slug,
         category: formData.category,
+        content: formData.content,
         metaTitle: formData.metaTitle || formData.title,
         metaDescription: formData.metaDescription,
         keywords: keywordsArray,
-        sections: parsedSections,
-        schema: parsedSchema,
+        sections: [], // خالی - چون دیگه نمی‌خوایم
         published: formData.published,
       };
 
       await api.post('/landing-pages', payload);
-      setSuccess('لندینگ پیج با موفقیت ایجاد شد');
+      setSuccess('صفحه با موفقیت ایجاد شد');
       
       setTimeout(() => {
         router.push('/admin/landing-pages');
       }, 1500);
     } catch (err: any) {
-      console.error('خطا در ایجاد لندینگ پیج:', err);
-      setError(err.message || 'خطا در ایجاد لندینگ پیج. لطفا دوباره تلاش کنید.');
+      console.error('خطا در ایجاد صفحه:', err);
+      setError(err.message || 'خطا در ایجاد صفحه. لطفا دوباره تلاش کنید.');
     } finally {
       setLoading(false);
     }
@@ -296,95 +236,6 @@ export default function NewLandingPagePage() {
           </div>
         </Card>
 
-        {/* Sections */}
-        <Card className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold" style={{ color: '#252525' }}>بخش‌ها (Sections)</h2>
-            <Button type="button" onClick={addSection} variant="secondary" size="sm">
-              <Plus className="w-4 h-4 ml-2" />
-              افزودن بخش
-            </Button>
-          </div>
-
-          <div className="space-y-4">
-            {sections.map((section, index) => (
-              <div key={index} className="p-4 border rounded-lg" style={{ borderColor: '#E0E0E0', backgroundColor: '#F9FAFB' }}>
-                <div className="flex items-center justify-between mb-3">
-                  <label className="block text-sm font-medium" style={{ color: '#545454' }}>
-                    بخش {index + 1}
-                  </label>
-                  {sections.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeSection(index)}
-                      className="p-1 hover:bg-red-100 rounded"
-                      style={{ color: '#C53030' }}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-
-                <div className="space-y-3">
-                  <div>
-                    <label className="block text-xs font-medium mb-1" style={{ color: '#7D7D7D' }}>
-                      نوع بخش
-                    </label>
-                    <select
-                      value={section.type}
-                      onChange={(e) => updateSection(index, 'type', e.target.value)}
-                      className="w-full px-3 py-2 border rounded-lg text-sm"
-                      style={{ borderColor: '#E0E0E0', backgroundColor: '#FFFFFF' }}
-                    >
-                      {sectionTypes.map((type) => (
-                        <option key={type.value} value={type.value}>
-                          {type.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-medium mb-1" style={{ color: '#7D7D7D' }}>
-                      داده (JSON)
-                    </label>
-                    <textarea
-                      value={section.data}
-                      onChange={(e) => updateSection(index, 'data', e.target.value)}
-                      rows={4}
-                      className="w-full px-3 py-2 border rounded-lg font-mono text-sm"
-                      style={{ borderColor: '#E0E0E0', backgroundColor: '#FFFFFF' }}
-                      placeholder='{"title": "عنوان", "description": "توضیحات"}'
-                    />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
-
-        {/* Schema Markup */}
-        <Card className="p-6">
-          <h2 className="text-xl font-bold mb-4" style={{ color: '#252525' }}>Schema Markup</h2>
-          <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#545454' }}>
-              Schema.org JSON-LD
-            </label>
-            <textarea
-              name="schema"
-              value={formData.schema}
-              onChange={handleInputChange}
-              rows={6}
-              className="w-full px-4 py-2 border rounded-lg font-mono text-sm"
-              style={{ borderColor: '#E0E0E0' }}
-              placeholder='{"@context": "https://schema.org", "@type": "Service", ...}'
-            />
-            <p className="text-xs mt-1" style={{ color: '#7D7D7D' }}>
-              اختیاری - Schema markup برای بهبود SEO
-            </p>
-          </div>
-        </Card>
-
         {/* Publish */}
         <Card className="p-6">
           <div className="flex items-center gap-3">
@@ -397,7 +248,7 @@ export default function NewLandingPagePage() {
               className="w-5 h-5"
             />
             <label htmlFor="published" className="text-sm font-medium cursor-pointer" style={{ color: '#252525' }}>
-              انتشار فوری این لندینگ پیج
+              انتشار فوری این صفحه
             </label>
           </div>
         </Card>
@@ -413,7 +264,7 @@ export default function NewLandingPagePage() {
             ) : (
               <>
                 <Save className="w-4 h-4 ml-2" />
-                ایجاد لندینگ پیج
+                ایجاد صفحه
               </>
             )}
           </Button>

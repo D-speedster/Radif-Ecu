@@ -4,22 +4,17 @@ import React, { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
-import { Loader2, Plus, Trash2, Save, ArrowRight, AlertCircle } from 'lucide-react';
+import { Loader2, Save, ArrowRight, AlertCircle } from 'lucide-react';
 import api from '@/lib/api';
 import Link from 'next/link';
 import RichTextEditor from '@/components/editor/RichTextEditor';
-
-interface Section {
-  type: string;
-  data: string;
-}
 
 interface LandingPage {
   _id: string;
   title: string;
   slug: string;
   category: string;
-  content?: string; // ✅ اضافه شد
+  content?: string;
   metadata?: {
     metaTitle?: string;
     metaDescription?: string;
@@ -29,20 +24,8 @@ interface LandingPage {
     type: string;
     data: any;
   }>;
-  schema?: any;
   published: boolean;
 }
-
-const sectionTypes = [
-  { value: 'hero', label: 'Hero (هیرو)' },
-  { value: 'features', label: 'Features (ویژگی‌ها)' },
-  { value: 'steps', label: 'Steps (مراحل)' },
-  { value: 'faq', label: 'FAQ (سوالات متداول)' },
-  { value: 'pricing', label: 'Pricing (قیمت‌گذاری)' },
-  { value: 'cta', label: 'CTA (فراخوان)' },
-  { value: 'text', label: 'Text (متن)' },
-  { value: 'contact', label: 'Contact (تماس)' },
-];
 
 export default function EditLandingPagePage() {
   const router = useRouter();
@@ -58,15 +41,12 @@ export default function EditLandingPagePage() {
     title: '',
     slug: '',
     category: '',
-    content: '', // ✅ اضافه شد
+    content: '',
     metaTitle: '',
     metaDescription: '',
     keywords: '',
     published: false,
-    schema: '',
   });
-
-  const [sections, setSections] = useState<Section[]>([]);
 
   useEffect(() => {
     if (id) {
@@ -79,38 +59,28 @@ export default function EditLandingPagePage() {
     setError('');
 
     try {
-      // Fetch landing page by ID using new endpoint
       const response = await api.get(`/landing-pages/by-id/${id}`);
       const landingPage = response.data.landingPage;
 
       if (!landingPage) {
-        setError('لندینگ پیج یافت نشد');
+        setError('صفحه یافت نشد');
         return;
       }
 
-      // Set form data, reading metadata from nested structure
       setFormData({
         title: landingPage.title,
         slug: landingPage.slug,
         category: landingPage.category || '',
-        content: landingPage.content || '', // ✅ اضافه شد
+        content: landingPage.content || '',
         metaTitle: landingPage.metadata?.metaTitle || '',
         metaDescription: landingPage.metadata?.metaDescription || '',
         keywords: landingPage.metadata?.keywords?.join(', ') || '',
         published: landingPage.published,
-        schema: landingPage.schema ? JSON.stringify(landingPage.schema, null, 2) : '',
       });
 
-      // Set sections
-      const sectionsData = landingPage.sections.map((section: { type: string; data: any }) => ({
-        type: section.type,
-        data: JSON.stringify(section.data, null, 2),
-      }));
-      setSections(sectionsData);
-
     } catch (err: any) {
-      console.error('خطا در دریافت لندینگ پیج:', err);
-      setError('خطا در بارگذاری لندینگ پیج');
+      console.error('خطا در دریافت صفحه:', err);
+      setError('خطا در بارگذاری صفحه');
     } finally {
       setLoading(false);
     }
@@ -126,22 +96,6 @@ export default function EditLandingPagePage() {
     setFormData((prev) => ({ ...prev, [name]: checked }));
   };
 
-  const addSection = () => {
-    setSections((prev) => [...prev, { type: 'text', data: '{}' }]);
-  };
-
-  const removeSection = (index: number) => {
-    setSections((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const updateSection = (index: number, field: 'type' | 'data', value: string) => {
-    setSections((prev) =>
-      prev.map((section, i) =>
-        i === index ? { ...section, [field]: value } : section
-      )
-    );
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -149,29 +103,6 @@ export default function EditLandingPagePage() {
     setSuccess('');
 
     try {
-      // Parse sections data
-      const parsedSections = sections.map((section) => {
-        try {
-          return {
-            type: section.type,
-            data: JSON.parse(section.data),
-          };
-        } catch {
-          throw new Error(`خطا در پارس JSON بخش ${section.type}`);
-        }
-      });
-
-      // Parse schema
-      let parsedSchema = undefined;
-      if (formData.schema.trim()) {
-        try {
-          parsedSchema = JSON.parse(formData.schema);
-        } catch {
-          throw new Error('خطا در پارس JSON Schema');
-        }
-      }
-
-      // Parse keywords
       const keywordsArray = formData.keywords
         .split(',')
         .map((k) => k.trim())
@@ -181,23 +112,23 @@ export default function EditLandingPagePage() {
         title: formData.title,
         slug: formData.slug,
         category: formData.category,
+        content: formData.content,
         metaTitle: formData.metaTitle || formData.title,
         metaDescription: formData.metaDescription,
         keywords: keywordsArray,
-        sections: parsedSections,
-        schema: parsedSchema,
+        sections: [], // خالی - چون دیگه نمی‌خوایم
         published: formData.published,
       };
 
       await api.put(`/landing-pages/${id}`, payload);
-      setSuccess('لندینگ پیج با موفقیت به‌روزرسانی شد');
+      setSuccess('صفحه با موفقیت به‌روزرسانی شد');
       
       setTimeout(() => {
         router.push('/admin/landing-pages');
       }, 1500);
     } catch (err: any) {
-      console.error('خطا در به‌روزرسانی لندینگ پیج:', err);
-      setError(err.message || 'خطا در به‌روزرسانی لندینگ پیج. لطفا دوباره تلاش کنید.');
+      console.error('خطا در به‌روزرسانی صفحه:', err);
+      setError(err.message || 'خطا در به‌روزرسانی صفحه. لطفا دوباره تلاش کنید.');
     } finally {
       setSaving(false);
     }
@@ -373,95 +304,6 @@ export default function EditLandingPagePage() {
           </div>
         </Card>
 
-        {/* Sections */}
-        <Card className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold" style={{ color: '#252525' }}>بخش‌ها (Sections)</h2>
-            <Button type="button" onClick={addSection} variant="secondary" size="sm">
-              <Plus className="w-4 h-4 ml-2" />
-              افزودن بخش
-            </Button>
-          </div>
-
-          <div className="space-y-4">
-            {sections.map((section, index) => (
-              <div key={index} className="p-4 border rounded-lg" style={{ borderColor: '#E0E0E0', backgroundColor: '#F9FAFB' }}>
-                <div className="flex items-center justify-between mb-3">
-                  <label className="block text-sm font-medium" style={{ color: '#545454' }}>
-                    بخش {index + 1}
-                  </label>
-                  {sections.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeSection(index)}
-                      className="p-1 hover:bg-red-100 rounded"
-                      style={{ color: '#C53030' }}
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-
-                <div className="space-y-3">
-                  <div>
-                    <label className="block text-xs font-medium mb-1" style={{ color: '#7D7D7D' }}>
-                      نوع بخش
-                    </label>
-                    <select
-                      value={section.type}
-                      onChange={(e) => updateSection(index, 'type', e.target.value)}
-                      className="w-full px-3 py-2 border rounded-lg text-sm"
-                      style={{ borderColor: '#E0E0E0', backgroundColor: '#FFFFFF' }}
-                    >
-                      {sectionTypes.map((type) => (
-                        <option key={type.value} value={type.value}>
-                          {type.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-medium mb-1" style={{ color: '#7D7D7D' }}>
-                      داده (JSON)
-                    </label>
-                    <textarea
-                      value={section.data}
-                      onChange={(e) => updateSection(index, 'data', e.target.value)}
-                      rows={4}
-                      className="w-full px-3 py-2 border rounded-lg font-mono text-sm"
-                      style={{ borderColor: '#E0E0E0', backgroundColor: '#FFFFFF' }}
-                      placeholder='{"title": "عنوان", "description": "توضیحات"}'
-                    />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
-
-        {/* Schema Markup */}
-        <Card className="p-6">
-          <h2 className="text-xl font-bold mb-4" style={{ color: '#252525' }}>Schema Markup</h2>
-          <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: '#545454' }}>
-              Schema.org JSON-LD
-            </label>
-            <textarea
-              name="schema"
-              value={formData.schema}
-              onChange={handleInputChange}
-              rows={6}
-              className="w-full px-4 py-2 border rounded-lg font-mono text-sm"
-              style={{ borderColor: '#E0E0E0' }}
-              placeholder='{"@context": "https://schema.org", "@type": "Service", ...}'
-            />
-            <p className="text-xs mt-1" style={{ color: '#7D7D7D' }}>
-              اختیاری - Schema markup برای بهبود SEO
-            </p>
-          </div>
-        </Card>
-
         {/* Publish */}
         <Card className="p-6">
           <div className="flex items-center gap-3">
@@ -474,7 +316,7 @@ export default function EditLandingPagePage() {
               className="w-5 h-5"
             />
             <label htmlFor="published" className="text-sm font-medium cursor-pointer" style={{ color: '#252525' }}>
-              انتشار این لندینگ پیج
+              انتشار این صفحه
             </label>
           </div>
         </Card>
@@ -495,9 +337,7 @@ export default function EditLandingPagePage() {
             )}
           </Button>
           <Link href="/admin/landing-pages">
-            <Button type="button" variant="secondary">
-              لغو
-            </Button>
+            <Button variant="secondary">انصراف</Button>
           </Link>
         </div>
       </form>
