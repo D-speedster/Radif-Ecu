@@ -208,8 +208,8 @@ export default function AdminDashboard() {
           onMouseLeave={(e) => e.currentTarget.style.borderColor = '#E0E0E0'}
         >
           <Globe className="w-8 h-8 mb-3 group-hover:scale-110 transition-transform" style={{ color: '#F59E0B' }} />
-          <h3 className="text-lg font-bold mb-1" style={{ color: '#252525' }}>مدیریت لندینگ پیج‌ها</h3>
-          <p className="text-sm" style={{ color: '#545454' }}>ساخت و ویرایش صفحات لندینگ</p>
+          <h3 className="text-lg font-bold mb-1" style={{ color: '#252525' }}>مدیریت صفحات</h3>
+          <p className="text-sm" style={{ color: '#545454' }}>ساخت و ویرایش صفحات سفارشی</p>
         </a>
 
         <a

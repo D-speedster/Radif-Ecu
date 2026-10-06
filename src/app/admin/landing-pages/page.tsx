@@ -125,7 +125,7 @@ export default function AdminLandingPagesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold mb-2" style={{ color: '#252525' }}>مدیریت لندینگ پیج‌ها</h1>
+          <h1 className="text-3xl font-bold mb-2" style={{ color: '#252525' }}>مدیریت صفحات</h1>
           <p style={{ color: '#545454' }}>تعداد کل: {landingPages.length} صفحه</p>
         </div>
         <div className="flex gap-3">
@@ -136,7 +136,7 @@ export default function AdminLandingPagesPage() {
           <Link href="/admin/landing-pages/new">
             <Button variant="accent">
               <Plus className="w-4 h-4 ml-2" />
-              لندینگ پیج جدید
+              صفحه جدید
             </Button>
           </Link>
         </div>
@@ -168,11 +168,11 @@ export default function AdminLandingPagesPage() {
       {landingPages.length === 0 ? (
         <Card className="p-12 text-center">
           <Globe className="w-12 h-12 mx-auto mb-4" style={{ color: '#7D7D7D' }} />
-          <p className="mb-4" style={{ color: '#545454' }}>هیچ لندینگ پیجی یافت نشد</p>
+          <p className="mb-4" style={{ color: '#545454' }}>هیچ صفحه‌ای یافت نشد</p>
           <Link href="/admin/landing-pages/new">
             <Button variant="primary">
               <Plus className="w-4 h-4 ml-2" />
-              اولین لندینگ پیج را بسازید
+              اولین صفحه را بسازید
             </Button>
           </Link>
         </Card>

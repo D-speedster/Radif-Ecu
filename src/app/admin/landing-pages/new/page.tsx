@@ -7,6 +7,7 @@ import Button from '@/components/ui/Button';
 import { Loader2, Plus, Trash2, Save, ArrowRight } from 'lucide-react';
 import api from '@/lib/api';
 import Link from 'next/link';
+import RichTextEditor from '@/components/editor/RichTextEditor';
 
 interface Section {
   type: string;
@@ -34,6 +35,7 @@ export default function NewLandingPagePage() {
     title: '',
     slug: '',
     category: '',
+    content: '', // ✅ اضافه شد
     metaTitle: '',
     metaDescription: '',
     keywords: '',
@@ -48,6 +50,7 @@ export default function NewLandingPagePage() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+
 
     // Auto-generate slug from title
     if (name === 'title' && !formData.slug) {
@@ -148,8 +151,8 @@ export default function NewLandingPagePage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold mb-2" style={{ color: '#252525' }}>لندینگ پیج جدید</h1>
-          <p style={{ color: '#545454' }}>ایجاد لندینگ پیج جدید</p>
+          <h1 className="text-3xl font-bold mb-2" style={{ color: '#252525' }}>صفحه جدید</h1>
+          <p style={{ color: '#545454' }}>ایجاد صفحه سفارشی جدید</p>
         </div>
         <Link href="/admin/landing-pages">
           <Button variant="secondary">
@@ -222,6 +225,23 @@ export default function NewLandingPagePage() {
                 placeholder="خدمات، محصولات، ..."
               />
             </div>
+          </div>
+        </Card>
+
+        {/* محتوای صفحه */}
+        <Card className="p-6">
+          <h2 className="text-xl font-bold mb-4" style={{ color: '#252525' }}>محتوای صفحه</h2>
+          <div>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#545454' }}>
+              متن صفحه (با ویرایشگر غنی)
+            </label>
+            <RichTextEditor
+              content={formData.content}
+              onChange={(html) => setFormData((prev) => ({ ...prev, content: html }))}
+            />
+            <p className="text-xs mt-2" style={{ color: '#7D7D7D' }}>
+              می‌توانید متن، عکس، لیست و فرمت‌دهی اضافه کنید
+            </p>
           </div>
         </Card>
 

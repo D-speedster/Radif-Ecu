@@ -59,6 +59,7 @@ export interface LandingPage {
   title: string;
   slug: string;
   category: string;
+  content?: string; // ✅ اضافه شد
   metaTitle?: string;
   metaDescription?: string;
   keywords?: string[];

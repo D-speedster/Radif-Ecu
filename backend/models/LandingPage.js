@@ -19,6 +19,11 @@ const landingPageSchema = new mongoose.Schema(
       trim: true,
       default: '',
     },
+    content: {
+      type: String,
+      default: '',
+      // محتوای HTML صفحه (ویرایشگر غنی)
+    },
     sections: {
       type: [mongoose.Schema.Types.Mixed],
       default: [],

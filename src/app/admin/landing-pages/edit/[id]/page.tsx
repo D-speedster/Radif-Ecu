@@ -7,6 +7,7 @@ import Button from '@/components/ui/Button';
 import { Loader2, Plus, Trash2, Save, ArrowRight, AlertCircle } from 'lucide-react';
 import api from '@/lib/api';
 import Link from 'next/link';
+import RichTextEditor from '@/components/editor/RichTextEditor';
 
 interface Section {
   type: string;
@@ -18,6 +19,7 @@ interface LandingPage {
   title: string;
   slug: string;
   category: string;
+  content?: string; // ✅ اضافه شد
   metadata?: {
     metaTitle?: string;
     metaDescription?: string;
@@ -56,6 +58,7 @@ export default function EditLandingPagePage() {
     title: '',
     slug: '',
     category: '',
+    content: '', // ✅ اضافه شد
     metaTitle: '',
     metaDescription: '',
     keywords: '',
@@ -90,6 +93,7 @@ export default function EditLandingPagePage() {
         title: landingPage.title,
         slug: landingPage.slug,
         category: landingPage.category || '',
+        content: landingPage.content || '', // ✅ اضافه شد
         metaTitle: landingPage.metadata?.metaTitle || '',
         metaDescription: landingPage.metadata?.metaDescription || '',
         keywords: landingPage.metadata?.keywords?.join(', ') || '',
@@ -224,7 +228,7 @@ export default function EditLandingPagePage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold mb-2" style={{ color: '#252525' }}>ویرایش لندینگ پیج</h1>
+          <h1 className="text-3xl font-bold mb-2" style={{ color: '#252525' }}>ویرایش صفحه</h1>
           <p style={{ color: '#545454' }}>{formData.title}</p>
         </div>
         <Link href="/admin/landing-pages">
@@ -298,6 +302,23 @@ export default function EditLandingPagePage() {
                 placeholder="خدمات، محصولات، ..."
               />
             </div>
+          </div>
+        </Card>
+
+        {/* محتوای صفحه */}
+        <Card className="p-6">
+          <h2 className="text-xl font-bold mb-4" style={{ color: '#252525' }}>محتوای صفحه</h2>
+          <div>
+            <label className="block text-sm font-medium mb-2" style={{ color: '#545454' }}>
+              متن صفحه (با ویرایشگر غنی)
+            </label>
+            <RichTextEditor
+              content={formData.content}
+              onChange={(html) => setFormData((prev) => ({ ...prev, content: html }))}
+            />
+            <p className="text-xs mt-2" style={{ color: '#7D7D7D' }}>
+              می‌توانید متن، عکس، لیست و فرمت‌دهی اضافه کنید
+            </p>
           </div>
         </Card>
 

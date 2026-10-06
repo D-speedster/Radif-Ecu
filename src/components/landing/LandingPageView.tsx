@@ -18,6 +18,24 @@ interface LandingPageViewProps {
 export default function LandingPageView({ landingPage }: LandingPageViewProps) {
   return (
     <div className="min-h-screen bg-white">
+      {/* اگر content وجود داشت، نمایش بده */}
+      {landingPage.content && (
+        <section className="py-20 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              <h1 className="text-4xl font-bold mb-8 text-right" style={{ color: '#252525' }}>
+                {landingPage.title}
+              </h1>
+              <div 
+                className="prose prose-lg max-w-none text-right"
+                style={{ color: '#545454', direction: 'rtl' }}
+                dangerouslySetInnerHTML={{ __html: landingPage.content }}
+              />
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Render sections dynamically */}
       {landingPage.sections.map((section, index) => {
         const key = `${section.type}-${index}`;
