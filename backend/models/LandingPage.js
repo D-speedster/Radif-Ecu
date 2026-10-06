@@ -25,12 +25,8 @@ const landingPageSchema = new mongoose.Schema(
       // محتوای HTML صفحه (ویرایشگر غنی)
     },
     sections: {
-      type: [mongoose.Schema.Types.Mixed],
+      type: Array,
       default: [],
-      // هر بخش شامل { type: String, data: Mixed } می‌باشد
-      // مثال: { type: 'hero', data: { title: '...', description: '...', image: '...' } }
-      // یا: { type: 'features', data: [{ icon: '...', title: '...', description: '...' }] }
-      // یا: { type: 'faq', data: [{ question: '...', answer: '...' }] }
     },
     metadata: {
       type: {
@@ -41,9 +37,8 @@ const landingPageSchema = new mongoose.Schema(
       default: () => ({ metaTitle: '', metaDescription: '', keywords: [] }),
     },
     schema: {
-      type: mongoose.Schema.Types.Mixed,
+      type: Object,
       default: null,
-      // Schema.org JSON-LD markup برای SEO
     },
     published: {
       type: Boolean,
